@@ -1,0 +1,12 @@
+.dz-p4{position:relative;width:1280px;height:532px;background:#000;color:#fff;font-family:Pretendard,'Apple SD Gothic Neo',Inter,'Helvetica Neue',sans-serif;overflow:hidden}
+.dz-p4__text{position:absolute;left:70px;top:50px;width:538px;height:432px;display:flex;flex-direction:column;justify-content:center;gap:24px}
+.dz-p4__text p{margin:0}
+.dz-p4__eyebrow{font-weight:600;font-size:16px;line-height:1.4;letter-spacing:-0.48px}
+.dz-p4__title{font-weight:600;font-size:28px;line-height:1.5;letter-spacing:-0.28px;white-space:nowrap}
+.dz-p4__desc{font-weight:400;font-size:16px;line-height:1.6;letter-spacing:-0.16px;white-space:nowrap}
+.dz-p4__card{position:absolute;left:672px;top:50px;width:538px;height:432px;background:#191919;border-radius:16px}
+.dz-p4__chart{position:absolute;left:0;top:0}
+.dz-p4__ctitle{position:absolute;left:42px;top:30px;margin:0;font-weight:600;font-size:18px;line-height:1.4;letter-spacing:-0.54px;white-space:nowrap}
+.dz-p4__yr{position:absolute;top:315px;font-weight:600;font-size:20px;line-height:1.5;letter-spacing:-0.2px;white-space:nowrap}
+.dz-p4__val{position:absolute;top:345px;font-weight:500;font-size:16px;line-height:1.4;letter-spacing:-0.16px;color:rgba(255,255,255,.55);white-space:nowrap}
+.dz-p4__src{position:absolute;right:11px;top:395px;font-weight:400;font-size:12px;line-height:1.4;letter-spacing:-0.36px;opacity:.3;white-space:nowrap;text-align:right}

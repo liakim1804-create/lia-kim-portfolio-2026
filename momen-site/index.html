@@ -1,0 +1,730 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MOMEN — IN TO OUT Journey</title>
+<link rel="icon" href="data:,">
+<link rel="preload" href="fonts/Pretendard-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/Pretendard-Medium.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/GT-America-Expanded-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+  /* Figma 「Slide 16:9 - 4」(173:2101) 1920 × 12400 그대로.
+     1 디자인 px = var(--u) — 화면 폭에 비례해 시안과 같은 비율로 그린다 */
+  @font-face { font-family: "Pretendard"; src: url("fonts/Pretendard-Regular.woff2") format("woff2"); font-display: swap; font-weight: 400; }
+  @font-face { font-family: "Pretendard"; src: url("fonts/Pretendard-Medium.woff2") format("woff2"); font-display: swap; font-weight: 500; }
+  @font-face { font-family: "GT America Expanded"; src: url("fonts/GT-America-Expanded-Regular.woff2") format("woff2"); font-display: swap; font-weight: 400; }
+  /* IFE 화면 서체 — 디자인 시스템 카드에서 견본으로 */
+  @font-face { font-family: "SF Pro Text"; src: url("fonts/SF-Pro-Text-Regular.woff2") format("woff2"); font-display: swap; font-weight: 400; }
+  @font-face { font-family: "SF Pro Text"; src: url("fonts/SF-Pro-Text-Medium.woff2") format("woff2"); font-display: swap; font-weight: 500; }
+
+  :root { --u: calc(100vw / 1920);
+    /* Rest + BEFORE LANDING 섹션(Prepare + Travel, 끝 12791)이 들어가며 Design System 이하가 밀린 양 — 후속 위치 계산에 같이 쓴다 */
+    --shift: calc(4855.25 * var(--u)); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #0a1421; }
+  body {
+    color: #fff;
+    font-family: "Pretendard", sans-serif;
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+   letter-spacing: -0.02em; }
+  /* 전체 높이 = 디자인 시스템 벤토 끝(9570.75 + 묶음 위치 · 히어로 220vh · 이륙 이미지 560vh · ENJOY 160vh) + 아래 여백 228.
+     = 890vh + (9570.75 − 415 − 309.5 + 228) + 이동량 */
+  .page { position: relative; width: 100%; height: calc(1010vh + 14894 * var(--u)); }   /* 마지막 지구 트랙 끝 */
+
+  /* 히어로 — 처음엔 창문 블라인드가 닫혀 있고, 스크롤하면 블라인드가 위로 걷히며 창밖이 드러난다.
+     .hero(길) = 무대 높이 + 스크롤 120vh. 무대(.stage)는 길 안에서 화면 위에 붙어 있다.
+     창문(원본 틀 455–895 × 205–810, 가운데 675, 507.5)은 첫 화면 정가운데. --s = 원본 1px 의 화면 크기 */
+  .hero { left: 0; top: 0; width: 100%; height: calc(100vh + 240 * var(--u) + 120vh); }
+  .stage { --s: max(calc(100vw / 1338), calc(100vh / 777)); --p: 0; --o: 0;   /* --o 블라인드 열림 0→1 */
+    position: sticky; top: 0; width: 100%; height: calc(100vh + 240 * var(--u)); overflow: hidden;
+    background: linear-gradient(180deg, #050c12 0%, #050c12 70%, #0a1421 100%); }
+  /* 사진 묶음 — 열린 창(바탕) · 닫힌 블라인드(유리 모양으로만) · 창에서 번지는 빛. 아래쪽은 벽색으로 스며든다 */
+  .photo-stack { position: absolute; left: calc(50% - 675 * var(--s)); top: calc(50vh - 507.5 * var(--s)); width: calc(1344 * var(--s)); height: calc(896 * var(--s));
+    transform: scale(calc(1 + var(--p) * .035)); transform-origin: 50.2% 56.6%;
+    -webkit-mask-image: linear-gradient(180deg, #000 82%, transparent 100%); mask-image: linear-gradient(180deg, #000 82%, transparent 100%); }
+  .photo-stack > img, .glass { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .photo-stack > img { filter: brightness(1.18) contrast(1.04); }   /* 기존보다 한 단계 밝게 */
+  /* 유리 모양 마스크(원본에서 열린 · 닫힌 사진 차이로 뽑아 맞춘 모양) — 유리 밖으로는 블라인드가 보이지 않는다 */
+  /* 마스크는 페이지 안에 직접(--glass-mask, 맨 아래) — 로컬 파일(file://)로 열면 Chrome 이 마스크 이미지 파일을 막는다 */
+  .glass { -webkit-mask: var(--glass-mask) 0 0 / 100% 100% no-repeat; mask: var(--glass-mask) 0 0 / 100% 100% no-repeat; }
+  /* 블라인드 — 유리를 덮는 네모난 판(원본 530–815 × 283–687). 닫힌 사진(Midjourney)의 블라인드 면을 판 크기로 펴서 쓰고,
+     열림만큼 제 높이를 위 하우징 속으로 올라간다. 아래 끝은 곧은 선 */
+  .shade { position: absolute; left: calc(530 / 1344 * 100%); top: calc(283 / 896 * 100%); width: calc(286 / 1344 * 100%); height: calc(405 / 896 * 100%);
+    background: url("img/hero-shade.jpg") 0 0 / 100% 100%; filter: brightness(1.18) contrast(1.04);
+    transform: translateY(calc(var(--o) * -100%)); will-change: transform; }
+  /* 블라인드 아래 끝 — 밝은 테두리와 그 아래 창밖으로 지는 옅은 그림자 */
+  .shade::after { content: ""; position: absolute; left: 0; right: 0; top: 100%; height: 14px; margin-top: -3px;
+    background: linear-gradient(180deg, rgba(200,214,232,.7) 0, rgba(200,214,232,.7) 2px, rgba(0,0,0,.4) 3px, rgba(0,0,0,0) 100%); }
+  /* 유리 둘레 그늘 — 블라인드든 창밖이든 둥근 유리 안에 있는 것처럼 */
+  .glass::after { content: ""; position: absolute; left: calc(530 / 1344 * 100%); top: calc(283 / 896 * 100%); width: calc(286 / 1344 * 100%); height: calc(405 / 896 * 100%);
+    background: radial-gradient(ellipse 62% 58% at 50% 50%, rgba(0,0,0,0) 62%, rgba(0,0,0,.32) 100%); pointer-events: none; }
+  /* 창에서 번지는 빛 — 닫혀 있을 땐 은은하게, 열릴수록 창 둘레 벽까지 밝힌다 */
+  .spill { position: absolute; inset: 0; pointer-events: none; mix-blend-mode: screen;
+    background: radial-gradient(ellipse 30% 42% at 50.2% 54%, rgba(150,172,212,.42) 0%, rgba(110,135,180,.18) 45%, rgba(110,135,180,0) 100%);
+    opacity: calc(.45 + var(--o) * .55); }
+  /* 워드마크 — 히어로 아래로 따로. 화면 폭에 꽉 차게 크게(260), 스크롤하면 흩어져 있던 글자가 한 자씩 모여 실제 로고(자간 0)가 된다 */
+  .wordmark { left: 0; top: calc(220vh + (240 + 80) * var(--u));   /* 히어로에 붙듯 80 */
+    width: 100%; height: calc(260 * var(--u)); text-align: center;
+    font-family: "GT America Expanded", sans-serif; font-weight: 400; font-size: calc(260 * var(--u)); line-height: 1; white-space: nowrap;
+    --ls: 0; letter-spacing: calc(var(--ls) * 1em); }
+  .wordmark span { display: inline-block; will-change: transform, opacity, filter; }
+  /* 히어로 끝(100vh + 240, 스크롤 120vh 뒤) + 80 · 워드마크 260 · 400 에서 In to Out Journey — 아래 묶음은 시안 숫자 그대로(1395 → …) */
+  .flow { left: 0; top: calc(220vh + (240 + 80 + 260 + 400 - 1395) * var(--u)); width: 100%; bottom: 0; }
+  .abs { position: absolute; }
+  /* 마지막 지구 — 이륙 이미지와 같은 카드 → 화면 가득 */
+  .photo-track.end-track { top: calc((12997 + 537.5) * var(--u) + 110vh); height: 170vh; }
+  .photo.end-photo img { filter: none; object-position: 50% 62%; }
+  .end-cta { position: absolute; left: 50%; top: 42%; transform: translate(-50%, -50%); z-index: 1; display: flex; flex-direction: column; align-items: center; gap: calc(48 * var(--u));
+    opacity: clamp(0, calc(var(--p) * 2.5 - 1.5), 1); }
+  .end-mark { font-family: "GT America Expanded", sans-serif; font-weight: 400; font-size: calc(104 * var(--u)); line-height: 1; letter-spacing: 0; white-space: nowrap; }
+  .cta-btn { display: inline-flex; align-items: center; gap: calc(12 * var(--u)); padding: calc(18 * var(--u)) calc(32 * var(--u)); border-radius: 100px; background: #fff; color: #111a23;
+    font-weight: 500; font-size: calc(20 * var(--u)); letter-spacing: calc(-0.4 * var(--u)); text-decoration: none; pointer-events: auto; transition: transform .3s ease, box-shadow .3s ease; }
+  .cta-btn svg { width: calc(20 * var(--u)); height: calc(20 * var(--u)); fill: none; stroke: currentColor; stroke-width: 1.8; }
+  .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 30px -10px rgba(0,0,0,.5); }
+  /* 상단 비행 타임라인 — 화면 위 고정, 좌우 본문 여백 110. 눈에 띄지 않게 얇고 옅게 */
+  .ftop { position: fixed; left: calc(110 * var(--u)); right: calc(110 * var(--u)); top: 22px; z-index: 50; pointer-events: none;
+    opacity: 0; transition: opacity .6s ease; mix-blend-mode: normal; }
+  .ftop.show { opacity: 1; }
+  /* 뒤 콘텐츠와 겹쳐도 읽히게 — 화면 위쪽에 옅은 남색 그라디언트 */
+  .ftop::before { content: ""; position: fixed; left: 0; right: 0; top: 0; height: 72px; z-index: -1; pointer-events: none;
+    background: linear-gradient(180deg, rgba(10,20,33,.85) 0%, rgba(10,20,33,.55) 50%, rgba(10,20,33,0) 100%); }
+  .ftop__line { position: relative; height: 1px; background: rgba(255,255,255,.14); }
+  .ftop__fill { position: absolute; left: 0; top: 0; bottom: 0; width: calc(var(--f, 0) * 100%); background: rgba(255,255,255,.55); }
+  .ftop__plane { position: absolute; top: 50%; left: calc(var(--f, 0) * 100%); width: 12px; height: 12px; margin: -6px 0 0 -6px; fill: #fff; transform: rotate(90deg); z-index: 1; }   /* 진행 위치 — 작은 비행기 */
+  .ftop ol { list-style: none; position: relative; height: 0; }
+  .ftop li { position: absolute; top: 0; padding-top: 12px; font-size: 10px; line-height: 1; letter-spacing: -0.02em; color: rgba(178,189,197,.45); white-space: nowrap; transition: color .4s ease; }
+  .ftop li::before { content: ""; position: absolute; top: -3px; width: 5px; height: 5px; border-radius: 50%; background: #3a4654; transition: background .4s ease; }
+  .ftop li:nth-child(1) { left: 0; } .ftop li:nth-child(1)::before { left: 0; }
+  .ftop li:nth-child(2) { left: 50%; transform: translateX(-50%); } .ftop li:nth-child(2)::before { left: 50%; margin-left: -2.5px; }
+  .ftop li:nth-child(3) { right: 0; } .ftop li:nth-child(3)::before { right: 0; }
+  .ftop li.on { color: rgba(255,255,255,.8); } .ftop li.on::before { background: #fff; }
+  /* Enjoy 와 같은 폭 — 왼쪽 238, 1444 × 812.25, 모서리 30.08 */
+  .ife.enjoy-w { left: calc(238 * var(--u)); width: calc(1444 * var(--u)); border-radius: calc(40 * 1444 / 1920 * var(--u)); }
+  .phase-desc.on-photo-desc { position: absolute; top: calc((130 + 196) * var(--u)); z-index: 1;   /* IN FLIGHT 처럼 제목 위쪽에서 196 */
+    opacity: clamp(0, calc(var(--p) * 2.5 - 1.7), 1); transform: translateY(calc((1 - clamp(0, calc(var(--p) * 2.5 - 1.7), 1)) * 24 * var(--u))); }
+  /* BEFORE TAKEOFF — 이륙 이미지 안 위쪽 빈 하늘(왼쪽 110 · 위 130, 아래는 엔진이 있어 피한다). 이미지가 펼쳐질수록 떠오른다 */
+  .phase.on-photo { position: absolute; left: calc(110 * var(--u)); top: calc(130 * var(--u)); bottom: auto; z-index: 1;
+    opacity: clamp(0, calc(var(--p) * 2.5 - 1.5), 1); transform: translateY(calc((1 - clamp(0, calc(var(--p) * 2.5 - 1.5), 1)) * 30 * var(--u))); }
+  /* Overview 이미지 — 왼쪽은 본문 여백 110, 오른쪽은 화면 끝까지. 왼쪽 모서리만 둥글게 */
+  .ov-img { left: calc(309.2 * var(--u)); right: 0;   /* 워드마크 왼쪽 끝에 맞춤 */
+    height: calc(520 * var(--u)); border-radius: calc(40 * var(--u)) 0 0 calc(40 * var(--u)); overflow: hidden; background: #111a23; }
+  .ov-img img { width: 100%; height: 100%; object-fit: cover; object-position: 30% 50%; filter: saturate(.62) brightness(1.3) contrast(.96); }
+  .ov-img::after { content: ""; position: absolute; inset: 0; background: #5a7494; mix-blend-mode: soft-light; opacity: .5; pointer-events: none; }   /* 프로토타입 지구 배경의 스틸 블루로 — 칙칙하지 않게, 보라 기 없이 */
+  .after { left: 0; width: 100%; top: calc(510vh + 1774.5 * var(--u)); bottom: 0; }   /* 이륙 이미지 끝(4694.5 + 510vh) + 350 에 Boarding(3270) */   /* 이미지 끝(2698.5 + 510vh) + 350 에 Boarding(3270) */   /* 이륙 이미지 끝(2698.5 + 510vh) + 59 에 BEFORE TAKEOFF(2776) */
+
+  /* 제목 + 설명 묶음(Frame 75 · 76) */
+  .block { left: calc(110 * var(--u)); display: flex; flex-direction: column; gap: calc(32 * var(--u)); align-items: flex-start; word-break: break-word; }
+  .block h2 { font-weight: 500; font-size: calc(40 * var(--u)); line-height: 1.32; letter-spacing: calc(-0.8 * var(--u)); white-space: nowrap; }
+  .block p { font-weight: 400; font-size: calc(18 * var(--u)); line-height: 1.6; letter-spacing: calc(-0.36 * var(--u)); width: calc(489 * var(--u)); }
+
+  /* Rectangle 9 — 이륙 이미지. 스크롤하면 --p(0→1)에 따라 양옆으로 꽉 차고 곡률이 사라진다.
+     높이는 그대로 두고, 이미지는 가운데 기준으로 채워서 늘어나도 찌그러지지 않는다 */
+  /* Core Principle — 이륙 이미지 아래 228. 길 400vh 안에서 무대(화면 높이)가 붙어 있고, 글 아래 이미지 카드 두 장 위로
+     내리면 글 → 타임라인이 한 단계씩 뜬다. 이미지 끝(2179.5 + 110vh) + 228 */
+  .cont-track { left: 0; width: 100%; top: calc(2394 * var(--u)); height: 400vh; }   /* Overview 이미지 끝(2166) + 228 */
+  .cont-stage { position: sticky; top: 0; width: 100%; height: 100vh; overflow: hidden; background: #0a1421; }
+  /* 이미지 둘 — 글 아래 108(130 + 글 143 + 108 = 381)부터 화면 아래 끝까지, 양끝까지 마진 · 틈 · 모서리 없이 반반 이어 붙인다 */
+  .cont-stage > .cp-cards { position: absolute; left: 0; top: calc(381 * var(--u)); width: 100%; bottom: 0; z-index: 0; }
+  .cp-card { position: absolute; top: 0; width: 50%; height: 100%; overflow: hidden; background: #111a23; }
+  /* 왼쪽 — 기내 창문 줄(Midjourney). 오른쪽 공항과 같은 남색 톤으로 */
+  .cp-card::before { content: ""; position: absolute; top: 0; bottom: 0; width: 100%;
+    background: linear-gradient(#3b4670, #3b4670), url("img/core-cabin.jpg") 50% 50% / cover no-repeat;
+    background-blend-mode: soft-light, normal;   /* 청록 기를 빼고 공항 사진과 같은 남보라로 물들인다 — 창빛 밝기는 유지 */
+    filter: saturate(.7) brightness(1.02); }
+  .cp-card:nth-child(1) { left: 0; } .cp-card:nth-child(1)::before { left: 0; }
+  .cp-card:nth-child(2) { right: 0; }
+  /* 오른쪽 — 공항 뷰(Midjourney). 레퍼런스처럼 어둡고 차분하게 눌러 남색 톤으로 */
+  .cp-card:nth-child(2)::before { right: 0; width: 100%; background: url("img/core-airport.jpg") 50% 50% / cover no-repeat; filter: saturate(.62) brightness(.62) sepia(.08); }
+  .cp-card::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 40%; background: linear-gradient(180deg, rgba(17,26,35,0), rgba(17,26,35,.55)); }
+  .cont-stage > * { position: relative; z-index: 1; }
+  .cont-stage::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 30%; pointer-events: none;
+    background: linear-gradient(180deg, rgba(4,8,15,0) 0%, rgba(4,8,15,.5) 100%); }
+  /* 이륙 이미지 — Overview 바로 아래(시안 자리 1642, 텍스트 아래 108). 카드(1700 × 1075)로 올라와 화면 가득 펼쳐진 뒤 잠깐(60vh) 머물렀다 지나간다.
+     무대 가운데에 카드가 오므로, 접힌 카드가 1642 에 놓이게 길을 둔다 */
+  .photo-track { left: 0; width: 100%; top: calc((3929 + 228 + 537.5) * var(--u) + 350vh); height: 160vh; }   /* Core Principle 끝 + 228 에 접힌 카드 */
+  .photo-stage { position: sticky; top: 0; width: 100%; height: 100vh; }
+  .photo { --p: 0; --q: 0; --h: calc(1075 * var(--u) + (100vh - 1075 * var(--u)) * var(--p));
+    left: calc(110 * (1 - var(--p)) * var(--u)); top: calc((100vh - var(--h)) / 2); width: calc((1700 + 220 * var(--p)) * var(--u)); height: var(--h);
+    border-radius: calc(40 * (1 - var(--p)) * var(--u)); overflow: hidden; will-change: left, width, height; }
+  .photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 55%;
+    filter: saturate(.72) brightness(.92) sepia(.06); }   /* 꼬리 끝부터 바퀴 아래 활주로까지 — 펼쳐져도 둘 다 잘리지 않게. 파란 기를 덜어 웹의 차분한 네이비에 맞춘다 */
+  /* Continuity — 화면 가득 펼쳐진 이미지 왼쪽 위(본문 여백 110, 위 130). 멈춘 뒤 한 번 더 내리면 제목 → 설명(--q) */
+  .journey { position: absolute; left: calc(110 * var(--u)); top: calc(130 * var(--u)); z-index: 1;
+    display: flex; flex-direction: column; gap: calc(32 * var(--u)); align-items: flex-start; }
+  .journey h2 { font-weight: 500; font-size: calc(40 * var(--u)); line-height: 1.32; letter-spacing: calc(-0.8 * var(--u)); white-space: nowrap;
+    opacity: clamp(0, calc(var(--q) * 2), 1); transform: translateY(calc((1 - clamp(0, calc(var(--q) * 2), 1)) * 24 * var(--u))); }
+  .journey p { font-weight: 400; font-size: calc(18 * var(--u)); line-height: 1.6; letter-spacing: calc(-0.36 * var(--u)); white-space: nowrap;
+    opacity: clamp(0, calc(var(--q) * 2 - 1), 1); transform: translateY(calc((1 - clamp(0, calc(var(--q) * 2 - 1), 1)) * 24 * var(--u))); }
+  /* 타임라인 — 이미지 아래쪽, 본문 좌우 여백(110)에 맞춰 화면 폭 가득. 활주로 위는 바탕색으로 살짝 눌러 선이 읽히게.
+     스크롤할수록 한 단계씩: 점 · 라벨이 뜨고(--a1~3), 선은 그다음 점까지 그어진다(--l 0→1) */
+  .jt { position: absolute; left: calc(110 * var(--u)); right: calc(110 * var(--u)); bottom: calc(110 * var(--u)); height: calc(44 * var(--u)); list-style: none; z-index: 2; }   /* 이미지 아래쪽, 좌우 · 아래 모두 110 */
+  .jt::before, .jt::after { content: ""; position: absolute; left: 0; right: 0; top: calc(5 * var(--u)); height: 1px; }
+  .jt::before { background: rgba(255,255,255,.14); opacity: var(--a1, 0); }
+  .jt::after { background: rgba(255,255,255,.7); transform-origin: 0 50%; transform: scaleX(var(--l, 0)); }
+  .jt li { position: absolute; top: 0; padding-top: calc(28 * var(--u)); font-size: calc(16 * var(--u)); line-height: 1; letter-spacing: -0.02em; color: #fff; white-space: nowrap; }
+  .jt li::before { content: ""; position: absolute; top: 0; width: calc(11 * var(--u)); height: calc(11 * var(--u)); border-radius: 50%; background: #fff; }
+  .jt li:nth-child(1) { left: 0; opacity: var(--a1, 0); transform: translateY(calc((1 - var(--a1, 0)) * 12 * var(--u))); }
+  .jt li:nth-child(1)::before { left: 0; }
+  .jt li:nth-child(2) { left: 50%; translate: -50% 0; opacity: var(--a2, 0); transform: translateY(calc((1 - var(--a2, 0)) * 12 * var(--u))); }
+  .jt li:nth-child(2)::before { left: 50%; margin-left: calc(-5.5 * var(--u)); }
+  .jt li:nth-child(3) { right: 0; opacity: var(--a3, 0); transform: translateY(calc((1 - var(--a3, 0)) * 12 * var(--u))); }
+  .jt li:nth-child(3)::before { right: 0; }
+
+  /* BEFORE TAKEOFF */
+  .phase { left: calc(110 * var(--u)); top: calc(2776 * var(--u)); font-family: "GT America Expanded", sans-serif; font-weight: 400; font-size: calc(144 * var(--u)); line-height: 1; letter-spacing: calc(-5.76 * var(--u)); white-space: nowrap; }
+  .phase-desc { left: calc(110 * var(--u)); white-space: nowrap;   /* 두 줄 — 줄바꿈은 문장에서 직접 */ font-weight: 400; font-size: calc(18 * var(--u)); line-height: 1.6; letter-spacing: calc(-0.36 * var(--u)); word-break: break-word; }
+
+  /* Rectangle 10 자리 — IFE 프로토타입 화면을 그대로(1920 × 1080 화면을 1700 폭으로, 모서리 40 → 35.42) */
+  .ife { left: calc(110 * var(--u)); width: calc(1700 * var(--u)); aspect-ratio: 16 / 9; border-radius: calc(40 * 1700 / 1920 * var(--u)); overflow: hidden; background: #000; }
+  .ife img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  /* 모드 선택 — 선택 상태 다섯 장을 겹쳐 두고 차례로 바꾼다(프로토타입 카드 전환처럼 부드럽게) */
+  /* 바탕(.base)은 늘 그대로 두고, 카드 줄(1920 기준 x 66–1854 · y 410–759)만 잘라 낸 위층을 바꾼다.
+     새 장이 이전 장 위에서 떠오르므로 중간에 어두워지지 않는다 */
+  .ife.modes img { position: absolute; inset: 0; }
+  .ife.modes .card { clip-path: inset(37.96% 3.44% 29.72% 3.44%); opacity: 0; transition: opacity .5s ease; }
+  .ife.modes .card.on { opacity: 1; }
+
+  /* ENJOY — 1444 폭(Figma Rectangle 11), 16:9, 모서리 40 → 30.08.
+     홈 화면(첫 화면 그대로, 스크롤 없음)에서 재생 화면으로 바뀐다 */
+  /* 스크롤로만 움직인다 — 화면 높이 + 160vh 짜리 길(기존 쇼잉의 ENJOY 와 같은 길이)(.track) 안에서 화면이 가운데에 붙어 있고, 그 사이 스크롤이 진행도 */
+  .track { left: calc(238 * var(--u)); width: calc(1444 * var(--u)); height: calc(812.25 * var(--u) + 160vh); }
+  .ife.enjoy { position: sticky; top: calc(50vh - 406.125 * var(--u)); left: auto; width: 100%; border-radius: calc(40 * 1444 / 1920 * var(--u)); }
+  .zoom { position: absolute; inset: 0; }
+  .zoom > img, .home { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .zoom .player { opacity: 0; transition: opacity .8s cubic-bezier(.22, .7, .18, 1); }   /* 기존 쇼잉처럼 절반을 넘으면 한 번에, 부드럽게 */
+  .ife.enjoy.play .zoom .player { opacity: 1; }
+  /* 홈 — 콘텐츠(1920 × 1842) 맨 위 + 상단 바 */
+  .home { overflow: hidden; }
+  .home .content { position: absolute; left: 0; top: 0; width: 100%; height: auto; aspect-ratio: 1920 / 1842; }
+  .home .header { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  /* IN FLIGHT 밤하늘 띠 — 5904.5(모드 화면 끝) + 175 ~ 6854.5(Enjoy) − 175 */
+  .band { left: 0; top: calc(6079.5 * var(--u)); width: 100%; height: calc(600 * var(--u)); overflow: hidden; background: linear-gradient(90deg, #091e31 0%, #091e31 45%, #031420 80%, #011119 100%); }   /* 이미지 하늘색 — 왼쪽은 밝고 오른쪽으로 갈수록 어둡다 */
+  /* 1536 × 768 → 1100 × 550. 비행기 가운데 x 1488 그대로, 세로는 띠 가운데(300)보다 살짝 위(285)로 — 눈으로 보기에 가운데.
+     비행기는 x 1262–1714 · y 114–457. 이미지 가장자리(왼쪽 · 위아래)는 바탕으로 스며들게 */
+  .band img { position: absolute; left: calc(857 * var(--u)); top: calc(24 * var(--u)); width: calc(1100 * var(--u)); height: calc(550 * var(--u)); max-width: none;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 18%), linear-gradient(180deg, transparent 0%, #000 14%, #000 86%, transparent 100%);
+    -webkit-mask-composite: source-in; mask-image: linear-gradient(90deg, transparent 0%, #000 18%), linear-gradient(180deg, transparent 0%, #000 14%, #000 86%, transparent 100%); mask-composite: intersect; }
+
+  /* Prepare 카드 — 1700 폭 안에 540 × 540 셋 */
+  .arrival { left: calc(110 * var(--u)); width: calc(1700 * var(--u)); height: calc(700 * var(--u)); }
+  .acard { position: absolute; width: calc(540 * var(--u)); height: calc(540 * var(--u));   /* 정사각형 */
+    border-radius: calc(32 * var(--u)); overflow: hidden; background: #111a23; }
+  /* 이미지가 카드 전체를 채우고, 아래쪽만 Navy 그라디언트를 깔아 글이 그 위에 떠 있다 */
+  .acard__img { position: absolute; inset: 0; overflow: hidden; background: #111a23; }   /* 이미지가 없거나 못 읽어도 Navy 면만 */
+  .acard__img::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 50%; pointer-events: none;
+    background: linear-gradient(180deg, rgba(17,26,35,0) 0%, rgba(17,26,35,.7) 55%, rgba(17,26,35,.92) 100%); }
+  .acard__img img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .6s cubic-bezier(.22, .7, .18, 1); }
+  .acard__img img.is-broken { visibility: hidden; }
+  .acard:hover .acard__img img { transform: scale(1.02); }
+  .acard__body { position: absolute; left: 0; right: 0; bottom: 0; padding: calc(40 * var(--u)); display: flex; flex-direction: column; gap: calc(12 * var(--u)); }   /* 아래 · 좌우 40 */
+  .acard h3 { font-weight: 500; font-size: calc(26 * var(--u)); line-height: 1.32; letter-spacing: calc(-0.52 * var(--u)); color: #fff; }
+  .acard p { font-size: calc(16 * var(--u)); line-height: 1.6; letter-spacing: calc(-0.32 * var(--u)); color: #b2bdc5; }
+  /* 글자 위아래 행간 여백을 덜어, 글의 실제 끝이 카드 가장자리에서 좌우와 같은 40 에 오게 */
+  .acard p { margin-bottom: -0.3em; } .acard h3 { margin-top: -0.16em; }
+  @media (prefers-reduced-motion: reduce) { .acard__img img { transition: none; } .acard:hover .acard__img img { transform: none; } }
+
+  /* Travel 벤토 — 1700 폭 */
+  .travel { left: calc(110 * var(--u)); width: calc(1700 * var(--u)); height: calc(1180 * var(--u)); }
+  .tcard { position: absolute; top: 0; width: calc(830 * var(--u)); border-radius: calc(40 * var(--u)); overflow: hidden; background: #111a23; }
+  .tcard > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(.85); }
+  .t-left { left: 0; height: calc(680 * var(--u)); }
+  .t-right { right: 0; height: calc(1180 * var(--u)); }
+  .t-right > img { object-position: 52% 50%; }
+  /* 아이폰 목업(Midjourney) 화면 위 QR — 300 × 650 면을 사진 속 화면 네 모서리로 원근 변형 */
+  .phone-fit { position: absolute; left: 0; top: 0; width: 830px; height: 680px; transform-origin: 0 0; pointer-events: none; }
+  .phone-screen { position: absolute; left: 0; top: 0; width: 300px; height: 650px; transform-origin: 0 0;
+    transform: matrix3d(0.611566,0.058068,0,0.000221,0.032225,0.579212,0,-0.000152,0,0,1,0,308.064516,130.241935,0,1);
+    display: grid; place-items: center; }
+  .phone-screen img { width: 56%; height: auto; filter: brightness(0) invert(1); opacity: .94; }   /* 짙은 QR 을 화면 위에서 흰색으로 */
+  /* 세로 카드 아래 항로 — 아래쪽만 Navy 그라디언트 */
+  .t-right::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 52%; pointer-events: none;
+    background: linear-gradient(180deg, rgba(17,26,35,0) 0%, rgba(17,26,35,.6) 50%, rgba(17,26,35,.9) 100%); }
+  .route { position: absolute; left: calc(88 * var(--u)); right: calc(88 * var(--u)); bottom: calc(88 * var(--u)); z-index: 1; color: #fff; }
+  .route__line { display: flex; align-items: center; gap: calc(18 * var(--u)); font-size: calc(22 * var(--u)); letter-spacing: -0.02em; }
+  .route__line i { flex: 1; height: 1px; background: rgba(255,255,255,.55); }
+  .route__line svg { width: calc(22 * var(--u)); height: calc(22 * var(--u)); fill: #fff; transform: rotate(90deg); }
+  .route__main { display: flex; justify-content: space-between; align-items: flex-start; margin-top: calc(40 * var(--u)); }
+  .route__main > div { display: flex; flex-direction: column; gap: calc(6 * var(--u)); }
+  .route__main .r { text-align: right; }
+  .route__main b { font-family: "GT America Expanded", sans-serif; font-weight: 400; font-size: calc(72 * var(--u)); line-height: 1; letter-spacing: 0; }
+  .route__main span { font-size: calc(18 * var(--u)); color: #b2bdc5; }
+  .route__main em { font-style: normal; font-size: calc(18 * var(--u)); color: #b2bdc5; margin-top: calc(10 * var(--u)); }
+  .route__time { display: flex; justify-content: space-between; margin-top: calc(40 * var(--u)); font-size: calc(18 * var(--u)); line-height: 1.5; }
+  .route__time .r { text-align: right; }
+  .route__time small { font-size: calc(15 * var(--u)); color: #b2bdc5; }
+
+  /* 흰 구간 */
+  .on-light { color: #fff; }
+
+  /* 디자인 시스템 벤토 — 1700 폭, 간격 20, 모서리 40.
+     왼쪽: 로고(836 × 700) · 로고 구성(836 × 340) / 오른쪽: 서체(836 × 340) · 글자 크기(836 × 340) · 컬러(836 × 340) */
+  .bento { left: calc(110 * var(--u)); width: calc(1700 * var(--u)); height: calc(1060 * var(--u)); display: grid; gap: calc(20 * var(--u));
+    grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(3, 1fr);
+    grid-template-areas: "logo logo type type" "logo logo scale scale" "grid grid color color"; }
+  .tile { position: relative; overflow: hidden; border-radius: calc(40 * var(--u)); background: linear-gradient(180deg, #172433 0%, #121d29 100%); box-shadow: inset 0 0 0 1px rgba(255,255,255,.05); }
+  /* 카드 안 여백은 상하좌우 모두 44 */
+  .tile { --pad: calc(44 * var(--u)); }
+  .tile .lbl { position: absolute; left: var(--pad); top: var(--pad); font-size: calc(16 * var(--u)); line-height: 1.4; letter-spacing: calc(-0.32 * var(--u)); color: #b2bdc5; z-index: 2; }
+  .tile .note { position: absolute; left: var(--pad); right: var(--pad); bottom: var(--pad); font-size: calc(16 * var(--u)); line-height: 1.6; letter-spacing: calc(-0.32 * var(--u)); color: #b2bdc5; z-index: 2; }
+  .tile .note b { display: block; font-weight: 500; font-size: calc(24 * var(--u)); color: #fff; letter-spacing: calc(-0.48 * var(--u)); margin-bottom: calc(6 * var(--u)); }
+  .tile .note b:last-child { margin-bottom: 0; }
+
+  /* 로고 — 지구 곡면 위 워드마크 */
+  /* 지구를 140 내려 지평선이 워드마크 아래로 — 위에 비는 자리는 이미지 하늘색으로 잇는다 */
+  .t-logo { grid-area: logo; background: linear-gradient(90deg, #1c324a 0%, #253a57 50%, #3a5478 100%); }
+  .t-logo > img { position: absolute; left: 0; top: calc(140 * var(--u)); width: 100%; height: 100%; object-fit: cover; object-position: 50% 0;
+    -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 14%); mask-image: linear-gradient(180deg, transparent 0%, #000 14%); }
+  .t-logo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(10,20,33,.2) 0%, rgba(10,20,33,0) 40%, rgba(10,20,33,.55) 100%); }
+  .t-logo .mark { position: absolute; left: 50%; top: 44%; transform: translate(-50%, -50%); z-index: 2; font-family: "GT America Expanded", sans-serif; font-weight: 400; font-size: calc(104 * var(--u)); line-height: 1; letter-spacing: 0;   /* 실제 로고: Regular · 자간 0 */ white-space: nowrap; }
+
+  /* 서체 견본 */
+  /* 한 장에 둘 — 영문 SF Pro Text · 한글 Apple SD Gothic Neo(SF Pro 에 없는 한글을 맡는 시스템 서체) */
+  .t-type { grid-area: type; }
+  .faces { position: absolute; left: var(--pad); right: var(--pad); top: var(--pad); bottom: var(--pad); display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--pad); }
+  .face { position: relative; }
+  .face .glyph { position: absolute; left: 0; top: 48%; transform: translateY(-50%); font-size: calc(140 * var(--u)); line-height: 1; white-space: nowrap; font-weight: 500; }   /* 서체 이름과 같은 왼쪽 선 */
+  .face .name { position: absolute; bottom: 0; font-weight: 500; font-size: calc(24 * var(--u)); line-height: 1.6; letter-spacing: calc(-0.48 * var(--u)); }
+  /* 글자 안쪽 여백(사이드 베어링)만큼 당겨 잉크가 이름의 첫 글자와 같은 선에 오게 — 실측: Aa 3.73 · 가 5.01 (140 기준) */
+  .face.en .glyph { font-family: "SF Pro Text", sans-serif; letter-spacing: calc(-2.8 * var(--u)); transform: translate(-.0267em, -50%); }
+  .face.ko .glyph { font-family: "Apple SD Gothic Neo", "Pretendard", sans-serif;   /* Mac 이 아니면 함께 배포한 Pretendard 로 */
+    transform: translate(-.0358em, -50%); }
+
+  /* 컬러 시스템 */
+  .t-color { grid-area: color; }
+  .swatches { position: absolute; left: var(--pad); right: var(--pad); top: calc(var(--pad) + 52 * var(--u)); bottom: var(--pad); display: grid; grid-template-columns: repeat(6, 1fr); gap: calc(12 * var(--u)); }
+  .sw { display: flex; flex-direction: column; gap: calc(12 * var(--u)); }
+  .sw i { flex: 1; border-radius: calc(20 * var(--u)); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
+  .sw span { font-size: calc(14 * var(--u)); line-height: 1.4; color: #b2bdc5; letter-spacing: -0.02em; }
+  .sw span b { display: block; font-weight: 500; color: #fff; font-size: calc(16 * var(--u)); }
+
+  /* 로고 구성 — 워드마크에 맞춘 안내선 */
+  .t-grid { grid-area: grid; display: grid; place-items: center; }
+  .construct { position: relative; font-family: "GT America Expanded", sans-serif; font-weight: 400; font-size: calc(88 * var(--u)); line-height: .74; letter-spacing: 0; white-space: nowrap; z-index: 2; }
+  .construct i { position: absolute; border-color: rgba(178,189,197,.28); border-style: solid; border-width: 0; }
+  .construct .h { left: -100vw; right: -100vw; border-top-width: 1px; }
+  .construct .v { top: -100vh; bottom: -100vh; border-left-width: 1px; }
+
+  /* 글자 크기 체계 */
+  .t-scale { grid-area: scale; }
+  .rows { position: absolute; left: var(--pad); right: var(--pad); top: calc(var(--pad) + 52 * var(--u)); bottom: var(--pad); display: flex; flex-direction: column; justify-content: space-between; font-family: "SF Pro Text", "Apple SD Gothic Neo", "Pretendard", sans-serif; }
+  .rows div { display: flex; align-items: baseline; justify-content: space-between; gap: calc(24 * var(--u)); padding-bottom: calc(12 * var(--u)); border-bottom: 1px solid rgba(255,255,255,.08); }
+  .rows div:last-child { border-bottom: 0; padding-bottom: 0; }
+  .rows small { font-family: "Pretendard", sans-serif; font-size: calc(14 * var(--u)); color: #6e7c86; letter-spacing: -0.02em; white-space: nowrap; }
+  .rows span { white-space: nowrap; }
+
+  /* 벤토 카드는 차례로 떠오른다 */
+  .bento .tile:nth-child(2) { transition-delay: .08s; } .bento .tile:nth-child(3) { transition-delay: .16s; }
+  .bento .tile:nth-child(4) { transition-delay: .12s; } .bento .tile:nth-child(5) { transition-delay: .2s; } .bento .tile:nth-child(6) { transition-delay: .24s; }
+
+
+  /* 스크롤하면 떠오르기 */
+  .rv { opacity: 0; transform: translateY(calc(60 * var(--u))); transition: opacity 1s cubic-bezier(.22, .7, .18, 1), transform 1.2s cubic-bezier(.22, .7, .18, 1); }
+  .rv.in { opacity: 1; transform: none; }
+  .block.rv p { opacity: 0; transform: translateY(calc(24 * var(--u))); transition: inherit; transition-delay: .15s; }
+  .block.rv.in p { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .rv, .block.rv p { opacity: 1; transform: none; transition: none; } }
+
+  /* img/hero-glass-mask.png 그대로 */
+  :root { --glass-mask: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABUAAAAOACAYAAAD7Ptm1AAAQAElEQVR4AezdaZYbObImUHZvrKpXVsqVddbK3gtIilQMHHwA4DCzWyepIJ3ugNk1On98J1T6vzf/I0CAAAECBAgQIECAAAECBLIL6I8AAQJlBQSgZUevcQIECBAgQIBARQE9EyBAgAABAgQIVBMQgFabuH4JECDQBDwIECBAgAABAgQIECBAgEARgdIBaJEZa5MAAQIECBAgQIAAAQIECJQW0DwBArUFBKC15697AgQIECBAgACBOgI6JUCAAAECBAiUFBCAlhy7pgkQIFBZQO8ECBAgQIAAAQIECBAgUElAAFpp2h979ZwAAQIECBAgQIAAAQIECBDIL6BDAgRuAlAfAgIECBAgQIAAAQIE0gtokAABAgQIEKgrIACtO3udEyBAgEA9AR0TIECAAAECBAgQIECgnIAAtNzINXy7MSBAgAABAgQIECBAgAABAgTyC+iQwC8BAegvB38SIECAAAECBAgQIEAgp4CuCBAgQIBAcQEBaPEPgPYJECBAgEAVAX0SIECAAAECBAgQIFBTQABac+66riugcwIECBAgQIAAAQIECBAgQCC/gA4/CAhAP2B4SoAAAQIECBAgQIAAAQKZBPRCgAABAgRuNwGoTwEBAgQIECBAILuA/ggQIECAAAECBAgUFhCAFh6+1glUE9AvAQIECBAgQIAAAQIECBAgkF/ga4cC0K8iXhMgQIAAAQIECBAgQIAAgfgCOiBAgACB3wIC0N8QfhAgQIAAAQIECGQU0BMBAgQIECBAgEB1AQFo9U+A/gkQqCGgSwIECBAgQIAAAQIECBAgUFSgVABadMbaJkCAAAECBAgQIECAAAECpQQ0S4AAgY8CAtCPGp4TIECAAAECBAgQyCOgEwIECBAgQIAAgTcBAegbgv8IECBAILOA3ggQIECAAAECBAgQIECgsoAAtMr09UmAAAECBAgQIECAAAECBAjkF9AhAQLfBASg30gcIECAAAECBAgQIEAguoD6CRAgQIAAAQLvAgLQdwk/CRAgQIBAPgEdESBAgAABAgQIECBAoLyAALT8R6ACgB4JECBAgAABAgQIECBAgACB/AI6JHBfQAB638VRAgQIECBAgAABAgQIxBRQNQECBAgQIPBJQAD6icMLAgQIECBAIIuAPggQIECA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AgQI5BfQIQEC3QUEoN1JLUiAAAECBAgQIECAwFkB1xMgQIAAAQIEegkIQHtJWocAAQIECPQXsCIBAgQIECBAgAABAgQInBQQgJ4EdPkMAXsQIECAAAECBAgQIECAAAEC+QV0SGCMgAB0jKtVCRAgQIAAAQIECBAgcEzAVQQIECBAgEBXAQFoV06LESBAgAABAr0ErEOAAAECBAgQIECAAIEeAgLQHorWIDBOwMoECBAgQIAAAQIECBAgQIBAfgEdDhQQgA7EtTQBAgQIECBAgAABAgQI7BFwLgECBAgQ6C8gAO1vakUCBAgQIECAwDkBVxMgQIAAAQIECBAg0E1AANqN0kIECPQWsB4BAgQIECBAgAABAgQIECCQX2B0hwLQ0cLWJ0CAAAECBAgQIECAAAECrwWcQYAAAQKDBASgg2AtS4AAAQIECBAgcETANQQIECBAgAABAgT6CghA+3pajQABAn0ErEKAAAECBAgQIECAAAECBAh0EVg6AO3SoUUIECBAgAABAgQIECBAgACBpQUUR4AAgZECAtCRutYmQIAAAQIECBAgsF3AmQQIECBAgAABAgMEBKADUC1JgAABAmcEXEuAAAECBAgQIECAAAECBPoJCED7WfZdyWoECBAgQIAAAQIECBAgQIBAfgEdEiAwXEAAOpzYBgQIECBAgAABAgQIvBLwPgECBAgQIEBglIAAdJSsdQkQIECAwH4BVxAgQIAAAQIECBAgQIBAZwEBaGdQy/UQsAYBAgQIECBAgAABAgQIECCQX0CHBOYICEDnONuFAAECBAgQIECAAAEC9wUcJUCAAAECBIYKCECH8lqcAAECBAgQ2CrgPAIECBAgQIAAAQIECIwQEICOULUmgeMCriRAgAABAgQIECBAgAABAgTyC+hwooAAdCK2rQgQIECAAAECBAgQIEDgo4DnBAgQIEBgvIAAdLyxHQgQIECAAAECzwW8S4AAAQIECBAgQIDAMAEB6DBaCxMgsFfA+QQIECBAgAABAgQIECBAgEB+gdkdCkBni9uPAAECBAgQIECAAAECBAjcbgwIECBAYJKAAHQStG0IECBAgAABAgTuCThGgAABAgQIECBAYKyAAHSsr9UJECCwTcBZBAgQIECAAAECBAgQIECAwBCBpQLQIR1alAABAgQIECBAgAABAgQIEFhKQDEECBCYKSAAnaltLwIECBAgQIAAAQJ/BDwjQIAAAQIECBCYICAAnYBsCwIECBB4JuA9AgQIECBAgAABAgQIECAwTkAAOs5238rOJkCAAAECBAgQIECAAAECBPIL6JAAgekCAtDp5DYkQIAAAQIECBAgQIAAAQIECBAgQGCWgAB0lrR9CBAgQIDAdwFHCBAgQIAAAQIECBAgQGCwgAB0MLDltwg4hwABAgQIECBAgAABAgQIEMgvoEMC1wgIQK9xtysBAgQIECBAgAABAlUF9E2AAAECBAhMFRCATuW2GQECBAgQIPAu4CcBAgQIECBAgAABAgRmCAhAZyjbg8BjAe8QIECAAAECBAgQIECAAAEC+QV0eKGAAPRCfFsTIECAAAECBAgQIECgloBuCRAgQIDAfAEB6HxzOxIgQIAAAQLVBfRPgAABAgQIECBAgMA0AQHoNGobESDwVcBrAgQIECBAgAABAgQIECBAIL/A1R0KQK+egP0JECBAgAABAgQIECBAoIKAHgkQIEDgIgEB6EXwtiVAgAABAgQI1BTQNQECBAgQIECAAIG5AgLQud52I0CAwC8BfxIgQIAAAQIECBAgQIAAAQJTBC4NQKd0aBMCBAgQIECAAAECBAgQIEDgUgGbEyBA4EoBAeiV+vYmQIAAAQIECBCoJKBXAgQIECBAgACBCwQEoBeg25IAAQK1BXRPgAABAgQIECBAgAABAgTmCQhA3KnnwwAAEABJREFU51l/3skrAgQIECBAgAABAgQIECBAIL+ADgkQuFxAAHr5CBRAgAABAgQIECBAIL+ADgkQIECAAAECVwkIQK+Sty8BAgQIVBTQMwECBAgQIECAAAECBAhMFhCATga3XRPwIECAAAECBAgQIECAAAECBPIL6JDAGgIC0DXmoAoCBAgQIECAAAECBLIK6IsAAQIECBC4VEAAeim/zQkQIECAQB0BnRIgQIAAAQIECBAgQOAKAQHoFer2rCygdwIECBAgQIAAAQIECBAgQCC/gA4XEhCALjQMpRAgQIAAAQIECBAgQCCXgG4IECBAgMD1AgLQ62egAgIECBAgQCC7gP4IECBAgAABAgQIELhMQAB6Gb2NCdQT0DEBAgQIECBAgAABAgQIECCQX2C1DgWgq01EPQQIECBAgAABAgQIECCQQUAPBAgQILCIgAB0kUEogwABAgQIECCQU0BXBAgQIECAAAECBK4VEIBe6293AgSqCOiTAAECBAgQIECAAAECBAgQuERgagB6SYc2JUCAAAECBAgQIECAAAECBKYK2IwAAQIrCQhAV5qGWggQIECAAAECBDIJ6IUAAQIECBAgQGABAQHoAkNQAgECBHIL6I4AAQIECBAgQIAAAQIECFwnIACdZW8fAgQIECBAgAABAgQIECBAIL+ADgkQWE5AALrcSBREgAABAgQIECBAIL6ADggQIECAAAECqwgIQFeZhDoIECBAIKOAnggQIECAAAECBAgQIEDgYgEB6MUDqLG9LgkQIECAAAECBAgQIECAAIH8AjoksKaAAHTNuaiKAAECBAgQIECAAIGoAuomQIAAAQIElhIQgC41DsUQIECAAIE8AjohQIAAAQIECBAgQIDACgIC0BWmoIbMAnojQIAAAQIECBAgQIAAAQIE8gvocGEBAejCw1EaAQIECBAgQIAAAQIEYgmolgABAgQIrCcgAF1vJioiQIAAAQIEoguonwABAgQIECBAgACBZQQEoMuMQiEE8gnoiAABAgQIECBAgAABAgQIEMgvsHqHAtDVJ6Q+AgQIECBAgAABAgQIEIggoEYCBAgQWFRAALroYJRFgAABAgQIEIgpoGoCBAgQIECAAAECawkIQNeah2oIEMgioA8CBAgQIECAAAECBAgQIEBgCYGhAegSHSqCAAECBAgQIECAAAECBAgQGCpgcQIECKwsIABdeTpqI0CAAAECBAgQiCSgVgIECBAgQIAAgQUFBKALDkVJBAgQiC2gegIECBAgQIAAAQIECBAgsI6AAHTULKxLgAABAgQIECBAgAABAgQI5BfQIQECywsIQJcfkQIJECBAgAABAgQIrC+gQgIECBAgQIDAqgIC0FUnoy4CBAgQiCigZgIECBAgQIAAAQIECBBYTEAAuthAcpSjCwIECBAgQIAAAQIECBAgQCC/gA4JxBAQgMaYkyoJECBAgAABAgQIEFhVQF0ECBAgQIDA0gIC0KXHozgCBAgQIBBHQKUECBAgQIAAAQIECBBYUUAAuuJU1BRZQO0ECBAgQIAAAQIECBAgQIBAfgEdBhIQgAYallIJECBAgAABAgQIECCwloBqCBAgQIDA+gIC0PVnpEICBAgQIEBgdQH1ESBAgAABAgQIECCwrIAAdNnRKIxAPAEVEyBAgAABAgQIECBAgAAB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S4AAAQIECBAgQIAAAQIECOQX0GEhAQFooWFrlQABAgQIECBAgAABAp8FvCJAgAABAvkFBKD5Z6xDAgQIECBA4JWA9wkQIECAAAECBAgQSCsgAE07Wo0R2C/gCgIECBAgQIAAAQIECBAgQCC/QLUOBaDVJq5fAgQIECBAgAABAgQIEGgCHgQIECBQREAAWmTQ2iRAgAABAgQI3BdwlAABAgQIECBAgEBuAQFo7vnqjgCBrQLOI0CAAAECBAgQIECAAAECBFIKfApAU3aoKQIECBAgQIAAAQIECBAgQOCTgBcECBCoJCAArTRtvRIgQIAAAQIECHwU8JwAAQIECBAgQKCAgAC0wJC1SIAAgecC3iVAgAABAgQIECBAgAABAnkFBKDvs/WTAAECBAgQIECAAAECBAgQyC+gQwIEygkIQMuNXMMECBAgQIAAAQIEbjcGBAgQIECAAIEqAgLQKpPWJwECBAjcE3CMAAECBAgQIECAAAECBJILCECTD3hbe84iQIAAAQIECBAgQIAAAQIE8gvokEBNAQFozbnrmgABAgQIECBAgEBdAZ0TIECAAAECpQQEoKXGrVkCBAgQIPBHwDMCBAgQIECAAAECBAhUEBCAVpiyHp8JeI8AAQIECBAgQIAAAQIECBDIL6DDwgIC0MLD1zoBAgQIECBAgAABAtUE9EuAAAECBOoJCEDrzVzHBAgQIECAAAECBAgQIECAAAECBMoICEDLjFqjBL4LOEKAAAECBAgQIECAAAECBAjkF6jeoQC0+idA/wQIECBAgAABAgQIEKghoEsCBAgQKCogAC06eG0TIECAAAECVQX0TYAAAQIECBAgQKCWgAC01rx1S4DAu4CfBAgQIECAAAECBAgQIECAQH6Btw4FoG8I/iNAgAABAgQIECBAgAABApkF9EaAAIHKAgLQytPXOwECBAgQIECgloBuCRAgQIAAAQIECgoIQAsOXcsECFQX0D8BAgQIECBAgAABAgQIEKgjUDcArTNjnRIgQIAAAQIECBAgQIAAgboCOidAoLyAALT8RwAAAQIECBAgQIBABQE9EiBAgAABAgSqCghAq05e3wQIEKgpoGsCBAgQIECAAAECBAgQKCYgAC028F/t+pMAAQIECBAgQIAAAQIECBDIL6BDAgSagAC0KXgQIECAAAECBAgQIJBXQGcECBAgQIBAaQEB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EXAOAQIECBAgQIDAGAEB6BhXqxIgQIDAMQFXESBAgAABAgQIECBAgACBrgIC0K6cvRazDgECBAgQIECAAAECBAgQIJBfQIcECMwQEIDOULYHAQIECBAgQIAAAQKPBbxDgAABAgQIEBgoIAAdiGtpAgQIECCwR8C5BAgQIECAAAECBAgQINBfQADa39SK5wRcTYAAAQIECBAgQIAAAQIECOQX0CGBaQIC0GnUNiJAgAABAikFfqTsSlMECKwokPT7ZkVqNREgQIAAgVwCAtBc89QNAQIECBCIKaBqAgQIECBAgAABAgQIDBIQgA6CtSyBIwKuIUCAAAECBAgQIECAAAECBPIL6HCugAB0rrfdCBAgQIAAAQIECBAgQOCXgD8JECBAgMAUAQHoFGabECBAgAABAgQeCThOgAABAgQIECBAgMBIAQHoSF1rEyCwXcCZBAgQIECAAAECBAgQIECAQH6BCzoUgF6AbksCBAgQIECAAAECBAgQqC2gewIECBCYJyAAnWdtJwIECBAgQIAAgc8CXhEgQIAAAQIECBAYLiAAHU5sAwIECLwS8D4BAgQIECBAgAABAgQIECAwSmCdAHRUh9YlQIAAAQIECBAgQIAAAQIE1hFQCQECBCYLCEAng9uOAAECBAgQIECAQBPwIECAAAECBAgQmCMgAJ3jbBcCBAgQuC/gKAECBAgQIECAAAECBAgQGCogAB3Ku3Vx5xEgQIAAAQIECBAgQIAAAQL5BXRIgMAVAgLQK9TtSYAAAQIECBAgQKCygN4JECBAgAABAhMFBKATsW1FgAABAgQ+CnhOgAABAgQIECBAgAABAuMFBKDjje3wXMC7BAgQIECAAAECBAgQIECAQH6lN81bAAAQAElEQVQBHRK4TEAAehm9jQkQIECAAAECBAgQqCegYwIECBAgQGC2gAB0trj9CBAgQIAAgduNAQECBAgQIECAAAECBCYJCEAnQduGwD0BxwgQIJBA4F8JetACAQIxBHzfxJiTKgkQIEDgjoBD1woIQK/1tzsBAgQIEIgu8O/oDaifAIEwAr5vwozqYaHeIECAAAEClwgIQC9htykBAgQIECBQV0DnBAgQIECAAAECBAjMFBCAztS2FwECfwQ8I0CAAAECBAgQIECAAAECBPILLNChAHSBISiBAAECBAgQIECAAAECBHIL6I4AAQIErhMQgF5nb2cCBAgQIECAQDUB/RIgQIAAAQIECBCYLiAAnU5uQwIECBAgQIAAAQIECBAgQIAAAQIEZglcF4DO6tA+BAgQIECAAAECBAgQIECAwHUCdiZAgMDFAgLQiwdgewIECBAgQIAAgRoCuiRAgAABAgQIELhGQAB6jbtdCRAgUFVA3wQIECBAgAABAgQIECBAYKqAAHQq9/tmfhIgQIAAAQIECBAgQIAAAQL5BXRIgMAKAgLQFaagBgIECBAgQIAAAQKZBfRGgAABAgQIELhQQAB6Ib6tCRAgQKCWgG4JECBAgAABAgQIECBAYL6AAHS+efUd9U+AAAECBAgQIECAAAECBAjkF9AhgWUEBKDLjEIhBAgQIECAAAECBAjkE9ARAQIECBAgcLWAAPTqCdifAAECBAhUENAjAQIECBAgQIAAAQIELhIQgF4Eb9uaAromQIAAAQIECBAgQIAAAQIE8gvocC0BAeha81ANAQIECBAgQIAAAQIEsgjogwABAgQILCEgAF1iDIogQIAAAQIE8grojAABAgQIECBAgACBKwUEoFfq25tAJQG9EiBAgAABAgQIECBAgAABAvkFFuxQALrgUJREgAABAgQIECBAgAABArEFVE+AAAEC6wgIQNeZhUoIECBAgAABAtkE9EOAAAECBAgQIEDgcgEB6OUjUAABAvkFdEiAAAECBAgQIECAAAECBAhcJTAvAL2qQ/sSIECAAAECBAgQIECAAAEC8wTsRIAAgcUEBKCLDUQ5BAgQIECAAAECOQR0QYAAAQIECBAgsIaAAHSNOaiCAAECWQX0RYAAAQIECBAgQIAAAQIELhUQgE7htwkBAgQIECBAgAABAgQIECCQX0CHBAisKCAAXXEqaiJAgAABAgQIECAQWUDtBAgQIECAAIGFBASgCw1DKQQIECCQS0A3BAgQIECAAAECBAgQIHC9gAD0+hlkr0B/BAgQIECAAAECBAgQIECAQH4BHRJYVkAAuuxoFEaAAAECBAgQIECAQDwBFRMgQIAAAQKrCQhAV5uIeggQIECAQAYBPRAgQIAAAQIECBAgQGARAQHoIoNQRk4BXREgQIAAAQIECBAgQIAAAQL5BXS4toAAdO35qI4AAQIECBAgQIAAAQJRBNRJgAABAgSWFBCALjkWRREgQIAAAQJxBVROgAABAgQIECBAgMBKAgLQlaahFgKZBPRCgAABAgQIECBAgAABAgQI5BcI0KEANMCQlEiAAAECBAgQIECAAAECawuojgABAgTWFRCArjsblREgQIAAAQIEogmolwABAgQIECBAgMByAgLQ5UaiIAIE4gvogAABAgQIECBAgAABAgQIEFhFYFwAukqH6iBAgAABAgQIECBAgAABAgTGCViZAAECiwsIQBcfkPIIECBAgAABAgRiCKiSAAECBAgQIEBgTQEB6JpzURUBAgSiCqibAAECBAgQIECAAAECBAgsJSAAHTIOixIgQIAAAQIECBAgQIAAAQL5BXRIgEAEAQFohCmpkQABAgQIECBAgMDKAmojQIAAAQIECCwsIABdeDhKI0CAAIFYAqolQIAAAQIECBAgQIAAgfUEBKDrzSR6ReonQIAAAQIECBAgQIAAAQIE8gvokEAYAQFomFEplAABAgQIECBAgACB9QRURIAAAQIECKwuIABdfULqI0CAAAECEQTUSIAAAQIECBAgQIAAgUUFBKCLDkZZMQVUTYAAAQIECBAgQIAAAQIECOQX0GEsAQForHmplgABAgQIECBAgAABAqsIqIMAAQIECIQQEICGGJMiCRAgQIAAgXUFVEaAAAECBAgQIECAwMoCAtCVp6M2ApEE1EqAAAECBAgQIECAAAECBAjkFwjYoQA04NCUTIAAAQIECBAgQIAAAQLXCtidAAECBOIICEDjzEqlBAgQIECAAIHVBNRDgAABAgQIECBAYHkBAejyI1IgAQLrC6iQAAECBAgQIECAAAECBAgQWFWgXwC6aofqIkCAAAECBAgQIECAAAECBPoJWIkAAQLBBASgwQamXAIECBAgQIAAgTUEVEGAAAECBAgQIBBDQAAaY06qJECAwKoC6iJAgAABAgQIECBAgAABAksLCEC7jMciBAgQIECAAAECBAgQIECAQH4BHRIgEFFAABpxamomQIAAAQIECBAgcKWAvQkQIECAAAECgQQEoIGGpVQCBAgQWEtANQQIECBAgAABAgQIECCwvoAAdP0ZrV6h+ggQIECAAAECBAgQIECAAIH8AjokEFZAABp2dAonQIAAAQIECBAgQGC+gB0JECBAgACBaAIC0GgTUy8BAgQIEFhBQA0ECBAgQIAAAQIECBAIIiAADTIoZa4poCoCBAgQIECAAAECBAgQIEAgv4AOYwsIQGPPT/UECBAgQIAAAQIECBCYJWAfAgQIECAQUkAAGnJsiiZAgAABAgSuE7AzAQIECBAgQIAAAQKRBASgkaalVgIrCaiFAAECBAgQIECAAAECBAgQyC+QoEMBaIIhaoEAAQIECBAgQIAAAQIExgpYnQABAgTiCghA485O5QQIECBAgACB2QL2I0CAAAECBAgQIBBOQAAabmQKJkDgegEVECBAgAABAgQIECBAgAABAlEEjgegUTpUJwECBAgQIECAAAECBAgQIHBcwJUECBAILiAADT5A5RMgQIAAAQIECMwRsAsBAgQIECBAgEBMAQFozLmpmgABAlcJ2JcAAQIECBAgQIAAAQIECIQSEIAeGpeLCBAgQIAAAQIECBAgQIAAgfwCOiRAIIOAADTDFPVAgAABAgQIECBAYKSAtQkQIECAAAECgQUEoIGHp3QCBAgQmCtgNwIECBAgQIAAAQIECBCIJyAAjTezqyu2PwECBAgQIECAAAECBAgQIJBfQIcE0ggIQNOMUiMECBAgQIAAAQIECPQXsCIBAgQIECAQXUAAGn2C6idAgAABAjME7EGAAAECBAgQIECAAIGgAgLQoINT9jUCdiVAgAABAgQIECBAgAABAgTyC+gwl4AANNc8dUOAAAECBAgQIECAAIFeAtYhQIAAAQIpBASgKcaoCQIECBAgQGCcgJUJECBAgAABAgQIEIgsIACNPD21E5gpYC8CBAgQIECAAAECBAgQIEAgv0DCDgWgCYeqJQIECBAgQIAAAQIECBA4J+BqAgQIEMgjIADNM0udECBAgAABAgR6C1iPAAECBAgQIECAQHgBAWj4EWqAAIHxAnYgQIAAAQIECBAgQIAAAQIEogpsD0CjdqhuAgQIECBAgAABAgQIECBAYLuAMwkQIJBMQACabKDaIUCAAAECBAgQ6CNgFQIECBAgQIAAgRwCAtAcc9QFAQIERglYlwABAgQIECBAgAABAgQIhBYQgG4an5MIECBAgAABAgQIECBAgACB/AI6JEAgo4AANONU9USAAAECBAgQIEDgjIBrCRAgQIAAAQKJBASgiYapFQIECBDoK2A1AgQIECBAgAABAgQIEIgvIACNP8PRHVifAAECBAgQIECAAAECBAgQyC+gQwJpBQSgaUerMQIECBAgQIAAAQIE9gu4ggABAgQIEMgmIADNNlH9ECBAgACBHgLW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CFwjYFcCBAgQIECAQCwBAWiseamWAAECBFYRUAcBAgQIECBAgAABAgQIhBAQgIYY07pFqowAAQIECBAgQIAAAQIECBDIL6BDApEFBKCRp6d2AgQIECBAgAABAgRmCtiLAAECBAgQCCggAA04NCUTIECAAIFrBexOgAABAgQIECBAgACBOAIC0DizUulqAuohQIAAAQIECBAgQIAAAQIE8gvoMLyAADT8CDVAgAABAgQIECBAgACB8QJ2IECAAAECUQUEoFEnp24CBAgQIEDgCgF7EiBAgAABAgQIECAQTEAAGmxgyiWwhoAqCBAgQIAAAQIECBAgQIAAgfwCOToUgOaYoy4IECBAgAABAgQIECBAYJSAdQkQIEAgtIAANPT4FE+AAAECBAgQmCdgJwIECBAgQIAAAQIRBQSgEaemZgIErhSwNwECBAgQIECAAAECBAgQIBBI4GAAGqhDpRIgQIAAAQIECBAgQIAAAQIHBVxGgACB+AIC0Pgz1AEBAgQIECBAgMBoAesTIECAAAECBAiEFRCAhh2dwgkQIDBfwI4ECBAgQIAAAQIECBAgQCCagAB0/8RcQYAAAQIECBAgQIAAAQIECOQX0CEBAkkEBKBJBqkNAgQIECBAgAABAmMErEqAAAECBAgQiC0gAI09P9UTIECAwCwB+xAgQIAAAQIECBAgQIBASAEBaMixXVe0nQkQIECAAAECBAgQIECAAIH8AjokkElAAJppmnohQIAAAQIECBAgQKCngLUIECBAgACBBAIC0ARD1AIBAgQIEBgrYHUCBAgQIECAAAECBAjEFRCAxp2dymcL2I8AAQIECBAgQIAAAQIECBDIL6DDdAIC0HQj1RABAgQIECBAgAABAgTOC1iBAAECBAhkERCAZpmkPggQIECAAIERAtYkQIAAAQIECBAgQCC4gAA0+ACVT2COgF0IECBAgAABAgQIECBAgACB/AI5OxSA5pyrrggQIECAAAECBAgQIEDgqIDrCBAgQCCVgAA01Tg1Q4AAAQIECBDoJ2AlAgQIECBAgAABAhkEBKAZpqgHAgRGClibAAECBAgQIECAAAECBAgQCCywMQAN3KHSCRAgQIAAAQIECBAgQIAAgY0CTiNAgEA+AQFovpnqiAABAgQIECBA4KyA6wkQIECAAAECBNIICEDTjFIjBAgQ6C9gRQIECBAgQIAA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CBAgQIAAAQIECOQXeNihAPQhjTcIECBAgAABAgQIECBAgEA0AfUSIECAwFcBAehXEa8JECBAgAABAgTiC+iAAAECBAgQIECAwG8BAehvCD8IECCQUUBPBAgQIECAAAECBAgQIECgukCFALT6jPVPgAABAgQIECBAgAABAgQqCOiRAAECdwUEoHdZHCRAgAABAgQIECAQVUDdBAgQIECAAAECHwUEoB81PCdAgACBPAI6IUCAAAECBAgQIECAAAECbwIC0DeEzP/pjQABAgQIECBAgAABAgQIEMgvoEMCBB4LCEAf23iHAAECBAgQIECAAIFYAqolQIAAAQIECHwTEIB+I3GAAAECBAhEF1A/AQIECBAgQIAAAQIECLwLCEDfJfzMJ6AjAgQIECBAgAABAgQIECBAIL+ADgm8EBCAvgDyNgECBAgQIECAAAECBCIIqJEAAQIECBC4LyAAve/iKAECBAgQIBBTQNUECBAgQIAAAQIECBD4JCAA/cThBYEsAvogQIAAAQIECBAgQIAAAQIE8gvocIuAAHSLknMIECBAgAABAgQIECBAYF0BlREgQIAAgScCAtAnON4iQIAAAQIECEQSUCsBAgQIECBAgAABAt8FBKDfTRwhQCC2gOoJECBAgAABAgQIECBAgACB/AKbOxSAbqZyIgECBAgQIECAAAECBAgQWE1APQQIECDwSkAA+krI+wQIECBAgAABAusLqJAAAQIECBAgQIDAAwEB6AMYhwkQIBBRQM0ECBAgQIAAAQIECBAgQIDAZ4GMAejnDr0iQIAAAQIECBAgQIAAAQIEMgroiQABApsEBKCbmJxEgAABAgQIECBAYFUBdREgQIAAAQIECDwTEIA+0/EeAQIECMQRUCkBAgQIECBAgAABAgQIELgjIAC9gxL5kNoJECBAgAABAgQIECBAgACB/AI6JEBgu4AAdLuVMwkQIECAAAECBAgQWEtANQQIECBAgACBlwIC0JdETiBAgAABAqsLqI8AAQIECBAgQIAAAQIEHgkIQB/JOB5PQMUECBAgQIAAAQIECBAgQIBAfgEdEtgpIADdCeZ0AgQIECBAgAABAgQIrCCgBgIECBAgQGCbgAB0m5OzCBAgQIAAgTUFVEWAAAECBAgQIECAAIGnAgLQpzzeJBBFQJ0ECBAgQIAAAQIECBAgQIBAfgEdHhEQgB5Rcw0BAgQIECBAgAABAgQIXCdgZwIECBAgsENAALoDy6kECBAgQIAAgZUE1EKAAAECBAgQIECAwGsBAehrI2cQILC2gOoIECBAgAABAgQIECBAgACB/AKHOxSAHqZzIQECBAgQIECAAAECBAgQmC1gPwIECBDYKyAA3SvmfAIECBAgQIAAgesFVECAAAECBAgQIEBgo4AAdCOU0wgQILCigJoIECBAgAABAgQIECBAgACB5wIZAtDnHXqXAAECBAgQIECAAAECBAgQyCCgBwIECBwSEIAeYnMRAQIECBAgQIAAgasE7EuAAAECBAgQILBHQAC6R8u5BAgQILCOgEoIECBAgAABAgQIECBAgMAGAQHoBqSVT1EbAQIECBAgQIAAAQIECBAgkF9AhwQIHBcQgB63cyUBAgQIECBAgAABAnMF7EaAAAECBAgQ2C0gAN1N5gICBAgQIHC1gP0JECBAgAABAgQIECBAYKuAAHSrlPPWE1ARAQIECBAgQIAAAQIECBAgkF9AhwROCghATwK6nAABAgQIECBAgAABAjME7EGAAAECBAgcExCAHnNzFQECBAgQIHCNgF0JECBAgAABAgQIECCwS0AAuovLyQRWEVAHAQIECBAgQIAAAQIECBAgkF9Ahz0EBKA9FK1BgAABAgQIECBAgAABAuMErEyAAAECBE4ICEBP4LmUAAECBAgQIDBTwF4ECBAgQIAAAQIECOwXEIDuN3MFAQLXCtidAAECBAgQIECAAAECBAgQyC/QrUMBaDdKCxEgQIAAAQIECBAgQIAAgd4C1iNAgACBswIC0LOCridAgAABAgQIEBgvYAcCBAgQIECAAAECBwUEoAfhXEaAAIErBOxJgAABAgQIECBAgAABAgQI7BOIGIDu69DZBAgQIECAAAECBAgQIECAQEQBNRMgQKCLgAC0C6NFCBAgQIAAAQIECIwSsC4BAgQIECBAgMAZAQHoGT3XEiBAgMA8ATsRIECAAAECBAgQIECAAIEDAgLQA2hXXmJvAgQIECBAgAABAgQIECBAIL+ADgkQ6CcgAO1naSUCBAgQIECAAAECBPoKWI0AAQIECBAgcFpAAHqa0AIECBAgQGC0gPUJECBAgAABAgQIECBA4KiAAPSonOvmC9iRAAECBAgQIECAAAECBAgQyC+gQwKdBQSgnUEtR4AAAQIECBAgQIAAgR4C1iBAgAABAgT6CAhA+zhahQABAgQIEBgjYFUCBAgQIECAAAECBAicEhCAnuJzMYFZAvYhQIAAAQIECBAgQIAAAQIE8gvocISAAHSEqjUJECBAgAABAgQIECBA4LiAKwkQIECAQEcBAWhHTEsRIECAAAECBHoKWIsAAQIECBAgQIAAgfMCAtDzhlYgQGCsgNUJECBAgAABAgQIECBAgACB/ALDOhSADqO1MAECBAgQIECAAAECBAgQ2CvgfAIECBDoLSAA7S1qPQIECBAgQIAAgfMCViBAgAABAgQIECDQSUAA2gnSMgQIEBghYE0CBAgQIECAAAECBAgQIEDgnECEAPRch64mQIAAAQIECBAgQIAAAQIEIgiokQABAkMEBKBDWC1KgAABAgQIECBA4KiA6wgQIECAAAECBHoKCEB7alqLAAECBPoJWIkAAQIECBAgQIAAAQIECHQQEIB2QBy5hLUJECBAgAABAgQIECBAgACB/AI6JEBgnIAAdJytlQkQIECAAAECBAgQ2CfgbAIECBAgQIBAdwEBaHdSCxIgQIAAgbMCridAgAABAgQIECBAgACBXgIC0F6S1ukvYEUCBAgQIECAAAECBAgQIEAgv4AOCQwWEIAOBrY8AQIECBAgQIAAAQIEtgg4hwABAgQIEBgjIAAd42pVAgQIECBA4JiAqwgQIECAAAECBAgQINBVQADaldNiBHoJWIcAAQIECBAgQIAAAQIECBDIL6DDGQIC0BnK9iBAgAABAgQIECBAgACBxwLeIUCAAAECAwUEoANxLU2AAAECBAgQ2CPgXAIECBAgQIAAAQIE+gsIQPubWpEAgXMCriZAgAABAgQIECBAgAABAgTyC0zrUAA6jdpGBAgQIECAAAECBAgQIEDgq4DXBAgQIDBaQAA6Wtj6BAgQIECAAAECrwWcQYAAAQIECBAgQGCQgAB0EKxlCRAgcETANQQIECBAgAABAgQIECBAgEBfgRUD0L4dWo0AAQIECBAgQIAAAQIECBBYUUBNBAgQmCIgAJ3CbBMCBAgQIECAAAECjwQcJ0CAAAECBAgQGCkgAB2pa20CBAgQ2C7gTAIECBAgQIAAAQIECBAgMEBAADoA9cySriVAgAABAgQIECBAgAABAgTyC+iQAIF5AgLQedZ2IkCAAAECBAgQIEDgCam1PwAAAdlJREFUs4BXBAgQIECAAIHhAgLQ4cQ2IECAAAECrwS8T4AAAQIECBAgQIAAAQKjBASgo2Stu1/AFQQIECBAgAABAgQIECBAgEB+AR0SmCwgAJ0MbjsCBAgQIECAAAECBAg0AQ8CBAgQIEBgjoAAdI6zXQgQIECAAIH7Ao4SIECAAAECBAgQIEBgqIAAdCivxQlsFXAeAQIECBAgQIAAAQIECBAgkF9Ah1cICECvULcnAQIECBAgQIAAAQIEKgvonQABAgQITBQQgE7EthUBAgQIECBA4KOA5wQIECBAgAABAgQIjBcQgI43tgMBAs8FvEuAAAECBAgQIECAAAECBAjkF7isQwHoZfQ2JkCAAAECBAgQIECAAIF6AjomQIAAgdkCAtDZ4vYjQIAAAQIECBC43RgQIECAAAECBAgQmCQgAJ0EbRsCBAjcE3CMAAECBAgQIECAAAECBAgQGCuwQgA6tkOrEyBAgAABAgQIECBAgAABAisIqIEAAQKXCAhAL2G3KQECBAgQIECAQF0BnRMgQIAAAQIECMwUEIDO1LYXAQIECPwR8IwAAQIECBAgQIAAAQIECEwQEIBOQH62hfcIECBAgAABAgQIECBAgACB/AI6JEDgOoH/BQAA///+4okXAAAABklEQVQDAKCPCB9UsakrAAAAAElFTkSuQmCC"); }
+</style>
+</head>
+<body>
+<!-- 상단 비행 타임라인 — 쇼잉 전체가 하나의 비행처럼. 얇은 선 하나와 작은 점 셋, 스크롤한 만큼 채워진다 -->
+<nav class="ftop" aria-label="비행 단계">
+  <div class="ftop__line"><i class="ftop__fill"></i><svg class="ftop__plane" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg></div>
+  <ol><li data-k="takeoff">BEFORE TAKEOFF</li><li data-k="flight">IN FLIGHT</li><li data-k="landing">BEFORE LANDING</li></ol>
+</nav>
+<main class="page">
+  <!-- 히어로 — 기내 창문, 첫 화면 높이에 꽉. 창문 유리 정가운데 워드마크 -->
+  <header class="abs hero">
+    <div class="stage">
+      <div class="photo-stack">
+        <img src="img/hero-window.jpg" alt="어두운 기내, 창밖으로 보이는 새벽 활주로">
+        <div class="glass"><div class="shade"></div></div>
+        <div class="spill"></div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 워드마크 — 히어로 바로 아래 80, In to Out Journey 위 400 -->
+  <h1 class="abs wordmark" aria-label="MOMEN"><span>M</span><span>O</span><span>M</span><span>E</span><span>N</span></h1>
+
+  <!-- 히어로 아래 228 에서 본문 시작 — 아래 모든 위치는 이 묶음(.flow) 안에서 시안 숫자 그대로 -->
+  <div class="abs flow">
+
+  <!-- Overview — 글(1395) 아래 108 에 오른쪽 끝까지 붙은 이미지 카드(1646 – 2166) -->
+  <section class="abs block rv" style="top: calc(1395 * var(--u)); left: calc(309.2 * var(--u))">   <!-- 워드마크 M 의 왼쪽 끝(309.2)에 맞춤 -->
+    <h2>Overview</h2>
+    <p>MOMEN은 좌석에 앉는 순간부터 여행지에 도착한 이후까지, 비행기 안과 밖의 모든 시간을 하나의 여정으로 잇는 항공사 IFE 서비스입니다.</p>
+  </section>
+  <div class="abs ov-img rv" style="top: calc(1646 * var(--u))"><img src="img/overview-plane.jpg" alt="노을 진 남색 하늘을 나는 여객기"></div>
+
+  <!-- Core Principle — 처음부터 화면 가득, 내리면 글 → 타임라인 -->
+  <section class="abs cont-track" aria-label="Core Principle">
+    <div class="cont-stage">
+      <div class="journey">
+        <h2>Core Principle</h2>
+        <p>정해진 기능을 오가는 기존 IFE와 달리, MOMEN은 승객의 시간과 상황에 맞춰<br>필요한 경험이 자연스럽게 이어지도록 설계했습니다.</p>
+      </div>
+      <div class="cp-cards" aria-hidden="true"><div class="cp-card"></div><div class="cp-card"></div></div>
+      <ol class="jt" aria-label="비행 단계"><li>BEFORE TAKEOFF</li><li>IN FLIGHT</li><li>BEFORE LANDING</li></ol>
+    </div>
+  </section>
+
+
+  <!-- Design System — Core Principle 끝(2394 + 400vh)에서 228, 텍스트 아래 108 에 벤토(1060). 벤토 끝 3929 + 400vh -->
+  <section class="abs block on-light rv" style="top: calc(2622 * var(--u) + 400vh)">
+    <h2>Design System</h2>
+    <p style="width: auto; white-space: nowrap">여정의 모든 순간이 하나의 경험으로 이어지도록, 일관된 컬러와 타이포그래피,<br>컴포넌트 체계를 구축했습니다. 상황과 모드가 달라져도 익숙하고 편안하게 사용할 수 있습니다.</p>
+  </section>
+
+  <div class="abs bento" style="top: calc(2869 * var(--u) + 400vh)">
+    <div class="tile t-logo rv">
+      <img src="img/earth.jpg" alt="">
+      <span class="lbl">Logo</span>
+      <p class="mark">MOMEN</p>
+      <p class="note"><b>GT America Expanded</b></p>
+    </div>
+    <div class="tile t-type rv">
+      <div class="faces">
+        <div class="face en"><span class="lbl" style="left:0; top:0">Typeface</span><p class="glyph">Aa</p><p class="name">SF Pro Text</p></div>
+        <div class="face ko"><p class="glyph">가</p><p class="name">Apple SD Gothic Neo</p></div>
+      </div>
+    </div>
+    <div class="tile t-color rv">
+      <span class="lbl">Color System</span>
+      <div class="swatches">
+        <div class="sw"><i style="background:#111A23"></i><span><b>Navy</b>#111A23</span></div>
+        <div class="sw"><i style="background:#324961"></i><span><b>Blue 2</b>#324961</span></div>
+        <div class="sw"><i style="background:#53779F"></i><span><b>Blue 1</b>#53779F</span></div>
+        <div class="sw"><i style="background:#FFFFFF"></i><span><b>White</b>#FFFFFF</span></div>
+        <div class="sw"><i style="background:#B2BDC5"></i><span><b>Gray 1</b>#B2BDC5</span></div>
+        <div class="sw"><i style="background:#6E7C86"></i><span><b>Gray 2</b>#6E7C86</span></div>
+      </div>
+    </div>
+    <div class="tile t-grid rv">
+      <p class="construct">MOMEN<i class="h" style="top:0"></i><i class="h" style="bottom:0"></i><i class="v" style="left:0"></i><i class="v" style="right:0"></i></p>
+    </div>
+    <div class="tile t-scale rv">
+      <span class="lbl">Type Scale</span>
+      <div class="rows">
+        <div><span style="font-size: calc(48 * var(--u) * .75); font-weight: 500">Head</span><small>48 · Medium</small></div>
+        <div><span style="font-size: calc(32 * var(--u) * .75); font-weight: 500">Title</span><small>32 · Medium</small></div>
+        <div><span style="font-size: calc(28 * var(--u) * .75); font-weight: 500">Subtitle</span><small>28 · Medium</small></div>
+        <div><span style="font-size: calc(24 * var(--u) * .75)">Body</span><small>24 · Regular</small></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 이륙 이미지 — 카드로 올라와 화면 가득 펼쳐진 뒤 지나간다 -->
+  <div class="abs photo-track">
+    <div class="photo-stage">
+      <div class="abs photo"><img src="img/takeoff-front.jpg" alt="밤의 활주로에 선 여객기 정면">
+        <h2 class="phase on-photo">BEFORE TAKEOFF</h2>
+        <p class="phase-desc on-photo-desc">탑승하고 좌석에 앉는 순간부터,<br>MOMEN과 함께하는 기내 경험이 시작됩니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 여기부터는 이륙 이미지 끝(2698.5 + 510vh)에서 59 아래 BEFORE TAKEOFF(2776) 기준 — 안쪽 위치는 시안 숫자 그대로 -->
+  <div class="abs after">
+
+
+  <!-- BEFORE TAKEOFF 아래(2920)에서 350 -->
+  <section class="abs block rv" style="top: calc(3270 * var(--u))">
+    <h2>Boarding</h2>
+    <p>탑승하고 이륙하기 전, 좌석에 앉는 순간부터 경험이 시작됩니다.<br>IFE와 휴대폰을 연동해 기내 경험을 편리하게 이어갈 수 있습니다.</p>
+  </section>
+
+  <!-- 텍스트 아래 108 — 화면 높이 956.25(16:9) -->
+  <div class="abs ife rv" style="top: calc(3517 * var(--u))"><img src="img/ife-onboarding.jpg" alt="MOMEN IFE 웰컴 화면 — 32A 님, 환영합니다"></div>
+
+  <!-- 웰컴 화면 아래(4473.25)에서 228 -->
+  <section class="abs block rv" style="top: calc(4701.25 * var(--u))">
+    <h2>Mode Selection</h2>
+    <p>지금 보내고 싶은 시간을 고르면 화면 구성과 추천,<br>조명과 알림이 해당 모드에 맞춰 한 번에 바뀝니다.</p>
+  </section>
+
+  <div class="abs ife modes rv" style="top: calc(4948.25 * var(--u))" aria-label="MOMEN IFE 모드 선택 화면" role="img">
+    <img class="base" src="img/ife-mode-enjoy.jpg" alt="">
+    <img class="card on" src="img/ife-mode-enjoy.jpg" alt="">
+    <img class="card" src="img/ife-mode-rest.jpg" alt="">
+    <img class="card" src="img/ife-mode-work.jpg" alt="">
+    <img class="card" src="img/ife-mode-prepare.jpg" alt="">
+    <img class="card" src="img/ife-mode-travel.jpg" alt="">
+  </div>
+
+  <!-- 모드 화면 아래(5904.5)에서 350 · 설명은 Figma 그대로 제목 위쪽에서 196 아래, 폭 280 -->
+  <!-- IN FLIGHT 구간 구분 — 화면 양옆까지 꽉 찬 하늘과 비행기. 모드 화면과 Enjoy 사이 여백의 가운데에서 시작·끝 -->
+  <div class="abs band" aria-hidden="true"><img src="img/inflight-plane.jpg" alt=""></div>
+  <h2 class="abs phase rv" data-stage="flight" style="top: calc(6254.5 * var(--u))">IN FLIGHT</h2>
+  <p class="abs phase-desc rv" style="top: calc(6450.5 * var(--u))">이륙 후에는 세 가지 모드 중 하나를 선택해,<br>원하는 방식으로 기내 시간을 보낼 수 있습니다.</p>
+
+  <!-- 설명 아래(6504.5)에서 350 · Figma Frame 78 / Rectangle 11 — x 238, 텍스트 아래 108 -->
+  <section class="abs block rv" style="top: calc(6854.5 * var(--u)); left: calc(238 * var(--u))">
+    <h2>Enjoy</h2>
+    <p style="width: calc(358 * var(--u))">좋아하는 콘텐츠를 끊김 없이. 영화와 음악, 게임까지 비행 중 즐길 수 있는 콘텐츠를 한곳에 담았습니다.</p>
+  </section>
+
+  <!-- 화면이 머무는 동안 스크롤 160vh — 다음 내용은 이 길의 끝(7913.75 + 160vh) 기준으로 잡는다 -->
+  <div class="abs track" style="top: calc(7101.5 * var(--u))">
+    <div class="ife enjoy rv" role="img" aria-label="MOMEN IFE ENJOY 홈에서 이어보기를 눌러 재생 화면으로 넘어가는 장면">
+      <div class="zoom">
+        <div class="home">
+          <img class="content" src="img/ife-enjoy-content.jpg" alt="">
+          <img class="header" src="img/ife-enjoy-header.png" alt="">
+        </div>
+        <img class="player" src="img/ife-enjoy-player.jpg" alt="">
+      </div>
+    </div>
+  </div>
+
+  <!-- Rest — ENJOY 길의 끝(7913.75 + 160vh)에서 350(Enjoy 와 같은 간격), 텍스트 아래 108 에 화면(Enjoy 와 같은 1444 × 812.25, 왼쪽 238). 끝 9323 -->
+  <section class="abs block rv" style="top: calc(8263.75 * var(--u) + 160vh); left: calc(238 * var(--u))">
+    <h2>Rest</h2>
+    <p style="width: auto; white-space: nowrap">식사 여부와 수면 사운드를 고르면, 잠든 동안 조명과 알림이 스스로 낮아집니다.<br>식사 시간처럼 꼭 필요한 순간에만 깨워, 방해 없이 쉴 수 있습니다.</p>
+  </section>
+  <div class="abs ife enjoy-w rv" style="top: calc(8510.75 * var(--u) + 160vh)"><img src="img/ife-rest.jpg" alt="MOMEN IFE REST 화면 — 식사 여부, 사운드, 잠들기"></div>
+
+  <!-- BEFORE LANDING — Rest 화면 끝(9345 + 160vh)에서 350. BEFORE TAKEOFF → Boarding 과 같은 간격(350 · 텍스트 아래 108) -->
+  <h2 class="abs phase rv" data-stage="landing" style="top: calc(9673 * var(--u) + 160vh)">BEFORE LANDING</h2>
+  <section class="abs block rv" style="top: calc(10167 * var(--u) + 160vh)">
+    <h2>Prepare</h2>
+    <p>도착 전에 필요한 준비를 확인하고,<br>기내에서 미리 완료할 수 있습니다.</p>
+  </section>
+  <!-- 기능 카드 셋 — 540 × 540 정사각형, 간격 40, 오른쪽으로 갈수록 80 씩 내려가는 계단. 맨 아래 카드 끝 11136 -->
+  <div class="abs arrival" style="top: calc(10414 * var(--u) + 160vh)">
+    <article class="acard rv" style="left: 0; top: 0">
+      <div class="acard__img"><img src="img/arrival-documents.jpg" alt="" loading="lazy"></div>
+      <div class="acard__body"><h3>입국 서류 작성</h3><p>필요한 입국 서류를 확인하고 기내에서 미리 작성합니다.</p></div>
+    </article>
+    <article class="acard rv" style="left: calc(580 * var(--u)); top: calc(80 * var(--u)); transition-delay: .12s">
+      <div class="acard__img"><img src="img/arrival-esim.jpg" alt="" loading="lazy"></div>
+      <div class="acard__body"><h3>eSIM 구매</h3><p>도착 즉시 사용할 현지 데이터 플랜을 기내에서 미리 준비합니다.</p></div>
+    </article>
+    <article class="acard rv" style="left: calc(1160 * var(--u)); top: calc(160 * var(--u)); transition-delay: .24s">
+      <div class="acard__img"><img src="img/arrival-baggage.jpg" alt="" loading="lazy"></div>
+      <div class="acard__body"><h3>수하물 위치 확인</h3><p>착륙 후 수하물의 현재 위치와 수취 정보를 확인합니다.</p></div>
+    </article>
+  </div>
+
+  <!-- Travel — Prepare 카드 끝(11136)에서 228, 다른 섹션처럼 텍스트 아래 108 에 벤토(830 × 680 · 830 × 1180, 간격 40). 끝 12791 -->
+  <section class="abs block rv" style="top: calc(11342 * var(--u) + 160vh)">
+    <h2>Travel</h2>
+    <p style="width: auto; white-space: nowrap">도착 시각과 날씨, 이동 시간에 맞춰 지금 갈 수 있는 장소를 제안합니다.<br>담아 둔 일정은 착륙 후 휴대폰의 여행 보드에서 그대로 이어갑니다.</p>
+  </section>
+  <div class="abs travel" style="top: calc(11589 * var(--u) + 160vh)">
+    <article class="tcard t-left rv">
+      <img src="img/travel-phone.jpg" alt="QR 코드가 뜬 아이폰">
+      <!-- 화면 — 830 × 680 기준 좌표의 네 모서리에 맞춘 원근(사진 속 화면 각도 그대로). 크기는 카드 폭에 맞춰 JS 로 -->
+      <div class="phone-fit"><div class="phone-screen"><img src="img/qr.svg" alt=""></div></div>
+    </article>
+    <article class="tcard t-right rv" style="transition-delay: .12s">
+      <img src="img/travel-eiffel.jpg" alt="">
+      <div class="route">
+        <div class="route__line"><span>FROM</span><i></i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z"/></svg><i></i><span>TO</span></div>
+        <div class="route__main"><div><b>ICN</b><span>인천</span></div><em>14h 00m</em><div class="r"><b>CDG</b><span>파리</span></div></div>
+        <div class="route__time"><div>11:30 PM<br><small>OCT 19. 2026</small></div><div class="r">6:30 AM<br><small>OCT 20. 2026</small></div></div>
+      </div>
+    </article>
+  </div>
+
+  <!-- 마지막 — Travel 끝(12769 + 160vh)에서 228. 디자인 시스템 로고 카드의 지구가 카드(1700 × 1075)로 올라와 화면 가득 펼쳐지고, 그 위에 MOMEN 체험하기 -->
+  <div class="abs photo-track end-track">
+    <div class="photo-stage">
+      <div class="abs photo end-photo"><img src="img/earth.jpg" alt="새벽빛이 번지는 지구의 곡면">
+        <div class="end-cta">
+          <p class="end-mark">MOMEN</p>
+          <a class="cta-btn" href="prototype/index.html" target="_blank" rel="noopener">MOMEN 체험하기 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </div>
+  </div>
+</main>
+<script>
+  // 히어로 — 스크롤 120vh 동안: .05–.85 블라인드가 걷힌다 · 전체에 걸쳐 창으로 아주 살짝 다가간다
+  (() => {
+    const hero = document.querySelector('.hero'), stage = hero.querySelector('.stage');
+    const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+    const span = (p, a, b) => clamp((p - a) / (b - a));
+    const easeInOut = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { stage.style.setProperty('--o', 1); return; }
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const run = hero.offsetHeight - stage.offsetHeight;
+      const p = clamp(-hero.getBoundingClientRect().top / run);
+      stage.style.setProperty('--p', p.toFixed(4));
+      stage.style.setProperty('--o', easeInOut(span(p, .05, .85)).toFixed(4));
+    };
+    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    addEventListener('resize', update);
+    update();
+  })();
+
+  // 워드마크 — 화면 아래로 들어와 가운데에 올 때까지: 자간이 넓게 벌어져 흐릿하던 글자들이 왼쪽부터 한 자씩 올라와 자리를 잡는다(되감으면 다시 흩어진다)
+  (() => {
+    const mark = document.querySelector('.wordmark'), letters = [...mark.children];
+    const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+    const span = (p, a, b) => clamp((p - a) / (b - a));
+    const easeOut = t => 1 - Math.pow(1 - t, 3);
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const r = mark.getBoundingClientRect(), vh = innerHeight;
+      const p = clamp((vh - r.top) / (vh / 2 + r.height / 2));   // 위쪽 끝이 화면 아래 → 가운데
+      mark.style.setProperty('--ls', ((1 - easeOut(span(p, 0, .9))) * .32).toFixed(4));
+      letters.forEach((el, i) => {
+        const q = easeOut(span(p, .05 + i * .09, .55 + i * .09));
+        el.style.opacity = q.toFixed(3);
+        el.style.transform = `translateY(${((1 - q) * .28).toFixed(4)}em)`;
+        el.style.filter = q > .995 ? 'none' : `blur(${((1 - q) * 14).toFixed(2)}px)`;
+      });
+    };
+    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    addEventListener('resize', update);
+    update();
+  })();
+
+  // Travel 아이폰 화면 — 830 × 680 기준으로 잡은 원근 면을 카드 크기에 맞춘다
+  (() => {
+    const card = document.querySelector('.t-left'), fit = card && card.querySelector('.phone-fit');
+    if (!fit) return;
+    const size = () => { fit.style.transform = `scale(${card.offsetWidth / 830})`; };
+    addEventListener('resize', size); size();
+  })();
+
+  // Arrival 카드 이미지 — 파일이 없거나 못 읽으면 깨진 아이콘 대신 Navy 면만 남긴다
+  document.querySelectorAll('.acard__img img').forEach(img => {
+    const broken = () => img.classList.add('is-broken');
+    img.addEventListener('error', broken);
+    if (img.complete && img.naturalWidth === 0) broken();
+  });
+
+  // 상단 비행 타임라인 — 이륙 이미지가 화면에 붙는 순간 → IN FLIGHT → BEFORE LANDING 을 점 셋(0 · 50 · 100%)에 두고, 사이는 스크롤한 만큼 채운다.
+  //                    Overview 부터 보이고 Design System(흰 구간) 에 들어서면 사라진다
+  (() => {
+    const nav = document.querySelector('.ftop'), items = [...nav.querySelectorAll('li')];
+    const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+    const docY = el => el.getBoundingClientRect().top + scrollY;
+    let A = [];
+    const measure = () => {
+      const vh = innerHeight;
+      A = [docY(document.querySelector('.photo-track')),                       // BEFORE TAKEOFF — 이미지가 화면에 붙을 때
+           docY(document.querySelector('[data-stage="flight"]')) - vh * .5,    // IN FLIGHT 가 화면 가운데
+           docY(document.querySelector('[data-stage="landing"]')) - vh * .5,   // BEFORE LANDING 이 화면 가운데
+           docY(document.querySelector('.end-track')) - vh * .6,                // 마지막 지구 앞에서 사라진다
+           docY(document.querySelector('.ov-img')) - vh];                       // Overview 이미지가 들어올 때부터 보인다
+    };
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const y = scrollY;
+      const f = y < A[1] ? .5 * clamp((y - A[0]) / (A[1] - A[0])) : .5 + .5 * clamp((y - A[1]) / (A[2] - A[1]));
+      nav.style.setProperty('--f', f.toFixed(4));
+      nav.classList.toggle('show', y > A[4] && y < A[3]);
+      items[0].classList.toggle('on', y >= A[0]);
+      items[1].classList.toggle('on', y >= A[1]);
+      items[2].classList.toggle('on', y >= A[2]);
+    };
+    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    addEventListener('resize', () => { measure(); update(); });
+    addEventListener('load', () => { measure(); update(); });
+    measure(); update();
+  })();
+
+  // 스크롤하면 떠오르기
+  (() => {
+    const io = new IntersectionObserver(es => es.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    }), { rootMargin: '0px 0px -12% 0px' });
+    document.querySelectorAll('.rv').forEach(el => io.observe(el));
+  })();
+
+  // 모드 선택 — 화면이 보이기 시작하면 ENJOY → REST → WORK → PREPARE → TRAVEL 로 넘긴다. 화면 밖에선 멈춘다
+  (() => {
+    const box = document.querySelector('.ife.modes');
+    const imgs = [...box.querySelectorAll('.card')];
+    let i = 0, z = 1, timer = null;
+    const next = () => {
+      const prev = imgs[i];
+      i = (i + 1) % imgs.length;
+      const cur = imgs[i];
+      cur.style.zIndex = ++z;                                  // 새 장을 맨 위에 올려 떠오르게 하고
+      cur.classList.add('on');
+      setTimeout(() => prev.classList.remove('on'), 550);      // 다 덮은 뒤에 이전 장을 내린다
+    };
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !timer) timer = setInterval(next, 1300);
+      else if (!e.isIntersecting && timer) { clearInterval(timer); timer = null; }
+    }, { threshold: .6 }).observe(box);
+  })();
+
+  // ENJOY — 스크롤로만: 화면이 가운데 붙어 있는 동안 스크롤하면 홈 → 재생 화면으로 바뀐다(되감으면 거꾸로)
+  (() => {
+    const track = document.querySelector('.track'), box = track.querySelector('.ife.enjoy');
+    const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const run = track.offsetHeight - box.offsetHeight;      // 붙어 있는 동안의 스크롤 길이
+      const p = clamp((parseFloat(getComputedStyle(box).top) - track.getBoundingClientRect().top) / run);
+      box.classList.toggle('play', p >= .5);
+    };
+    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    addEventListener('resize', update);
+    update();
+  })();
+
+  // 이륙 이미지 · 마지막 지구 — 화면 아래에서 올라와 무대가 화면에 붙을 때까지 펼쳐져 화면 가득(--p)
+  document.querySelectorAll('.photo-track').forEach(track => {
+    const photo = track.querySelector('.photo');
+    const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+    const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { photo.style.setProperty('--p', 1); return; }
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const vh = innerHeight, s = track.getBoundingClientRect().top;
+      const h0 = 1075 * innerWidth / 1920;                       // 접힌 이미지 높이
+      const start = vh * .9 - (vh - h0) / 2;                      // 이미지 위쪽 끝이 화면 90% 일 때의 무대 위치
+      photo.style.setProperty('--p', ease(clamp((start - s) / start)).toFixed(4));
+    };
+    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    addEventListener('resize', update);
+    update();
+  });
+
+  // Core Principle — 글은 섹션이 화면 아래에서 올라오는 동안 미리 뜬다(붙기 전). 붙어 있는 300vh: 타임라인 한 단계씩(.08 · .26 · .44) · 뒤는 머무름
+  (() => {
+    const track = document.querySelector('.cont-track'), stage = track.querySelector('.cont-stage');
+    const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+    const span = (p, a, b) => clamp((p - a) / (b - a));
+    const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    const easeOut = t => 1 - Math.pow(1 - t, 3);
+    const set = (k, v) => stage.style.setProperty(k, v.toFixed(4));
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { ['--q', '--a1', '--a2', '--a3', '--l'].forEach(k => set(k, 1)); return; }
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const top = track.getBoundingClientRect().top, vh = innerHeight;
+      const t = clamp(-top / (track.offsetHeight - vh));
+      set('--q', easeOut(clamp((vh * .85 - top) / (vh * .6))));          // 섹션 위쪽이 화면 85% → 25% 오는 동안 글이 뜬다
+      [.08, .26, .44].forEach((a, i) => set('--a' + (i + 1), easeOut(span(t, a, a + .08))));
+      set('--l', ease(span(t, .14, .26)) * .5 + ease(span(t, .32, .44)) * .5);   // 다음 점이 뜰 때 선이 거기까지
+    };
+    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+    addEventListener('resize', update);
+    update();
+  })();
+</script>
+</body>
+</html>

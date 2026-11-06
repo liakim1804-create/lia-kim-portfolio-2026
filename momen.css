@@ -1,0 +1,4 @@
+/* MOMEN 상세 — dipz.css 공용 + 히어로 사진, 전체화면 웹사이트 삽입 */
+.hero--photo { background: #0a1421; }
+.hero__photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.hero--photo .hero__text { z-index: 1; }

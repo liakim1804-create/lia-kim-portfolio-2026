@@ -1,0 +1,15 @@
+.dz-p5{position:relative;width:1280px;height:532px;background:#000;color:#fff;font-family:Pretendard,'Apple SD Gothic Neo',Inter,'Helvetica Neue',sans-serif;overflow:hidden}
+.dz-p5__card{position:absolute;left:70px;top:50px;width:538px;height:432px;background:#191919;border-radius:16px}
+.dz-p5__card>*{position:absolute;margin:0;white-space:nowrap;display:block}
+.dz-p5__meta{font-weight:500;font-size:12px;line-height:1.5;letter-spacing:-0.12px;opacity:.3}
+.dz-p5__sep{left:427px;top:24px;width:1px;height:10px;background:#fff;opacity:.3}
+.dz-p5__q{left:55px;font-weight:500;font-size:20px;line-height:1.4;letter-spacing:-0.2px;opacity:.5}
+.dz-p5__qt{left:55px;font-weight:500;font-size:16px;line-height:1.5;letter-spacing:-0.16px}
+.dz-p5__b{height:57px}
+.dz-p5__bt{font-weight:600;line-height:1.4;color:#191919}
+.dz-p5__w{color:#fff}
+.dz-p5__text{position:absolute;left:672px;top:50px;width:538px;height:432px;display:flex;flex-direction:column;justify-content:center;gap:24px}
+.dz-p5__text p{margin:0}
+.dz-p5__eyebrow{font-weight:600;font-size:16px;line-height:1.4;letter-spacing:-0.48px}
+.dz-p5__title{font-weight:600;font-size:28px;line-height:1.5;letter-spacing:-0.28px;white-space:nowrap}
+.dz-p5__desc{font-weight:400;font-size:16px;line-height:1.6;letter-spacing:-0.16px;white-space:nowrap}

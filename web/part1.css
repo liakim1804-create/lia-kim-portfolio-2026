@@ -1,0 +1,6 @@
+.dz-p1{width:1280px;height:81px;background:#000;display:flex;align-items:center;justify-content:space-between;padding:24px 70px;font-family:Pretendard,'Apple SD Gothic Neo',Inter,'Helvetica Neue',sans-serif}
+.dz-p1__logo{display:block;width:31.896px;height:33px;flex:none}
+.dz-p1__logo img{display:block;width:100%;height:100%}
+.dz-p1__nav{display:flex;align-items:center;gap:45px}
+.dz-p1__nav a{color:#fff;text-decoration:none;font-weight:500;font-size:16px;line-height:1.45;letter-spacing:-0.48px;white-space:nowrap;transition:opacity .2s}
+.dz-p1__nav a:hover{opacity:.6}

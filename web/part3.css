@@ -1,0 +1,6 @@
+.dz-p3{position:relative;width:1280px;height:502px;background:#000;overflow:hidden;color:#fff;font-family:Pretendard,'Apple SD Gothic Neo',Inter,'Helvetica Neue',sans-serif}
+.dz-p3__logo{position:absolute;left:234px;top:153px;width:189.998px;height:196.565px;display:block}
+.dz-p3__text{position:absolute;left:545px;top:calc(50% + .5px);transform:translateY(-50%);width:501px;display:flex;flex-direction:column;gap:24px}
+.dz-p3__eyebrow{margin:0;font-weight:600;font-size:16px;line-height:1.4;letter-spacing:-0.48px}
+.dz-p3__title{margin:0;font-weight:600;font-size:28px;line-height:1.5;letter-spacing:-0.28px;white-space:nowrap}
+.dz-p3__desc{margin:0;font-weight:400;font-size:16px;line-height:1.5;letter-spacing:-0.16px;white-space:nowrap}

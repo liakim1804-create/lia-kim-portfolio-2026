@@ -1,0 +1,47 @@
+.dz-p6{position:relative;width:1280px;height:4967px;background:#000;color:#fff;overflow:hidden;font-family:Pretendard,'Apple SD Gothic Neo',Inter,'Helvetica Neue',sans-serif}
+.dz-p6 *{margin:0}
+.dz-p6__a{position:absolute}
+.dz-p6 img{display:block}
+.dz-p6__insight-card{left:70px;top:153px;width:1140px;height:212px;background:#191919;border-radius:20px}
+.dz-p6__insight-t{left:309px;top:235px;width:663.64px;text-align:center;font-weight:600;font-size:28px;line-height:1.55;white-space:nowrap}
+.dz-p6__insight-t span{color:#0dea7c}
+.dz-p6__insight-l{left:605px;top:187px;width:70.23px;height:22px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:16px;line-height:1.4;letter-spacing:-.48px;opacity:.5;text-align:center}
+.dz-p6__head{position:absolute;left:70px;width:1140px;display:flex;flex-direction:column;gap:24px}
+.dz-p6__eyebrow{font-weight:600;font-size:16px;line-height:1.4;letter-spacing:-.48px;display:flex;align-items:center;white-space:nowrap}
+.dz-p6__title{font-weight:600;font-size:28px;line-height:1.5;letter-spacing:-.28px;white-space:nowrap}
+.dz-p6__desc{font-weight:400;font-size:16px;line-height:1.5;letter-spacing:-.16px;white-space:nowrap}
+.dz-p6__pcard{width:554px;height:196px;background:#191919;border-radius:16px;overflow:hidden}
+.dz-p6__avatar{position:absolute;left:32px;top:32px;width:56px;height:56px}
+.dz-p6__pname{position:absolute;left:104px;top:32px;font-weight:600;font-size:20px;line-height:30px;letter-spacing:-.2px}
+.dz-p6__psub{position:absolute;left:104px;top:66px;font-weight:500;font-size:16px;line-height:22.4px;letter-spacing:-.16px;color:rgba(255,255,255,.55);white-space:nowrap}
+.dz-p6__pq{position:absolute;left:32px;top:112px;width:490px;font-weight:500;font-size:18px;line-height:1.45;letter-spacing:-.18px;opacity:.8}
+.dz-p6__fcard{width:362.67px;height:384px;background:#191919;border-radius:16px;overflow:hidden}
+.dz-p6__fcard h3{position:absolute;left:32px;top:32px;font-weight:600;font-size:24px;line-height:1.2;letter-spacing:-.24px;white-space:nowrap}
+.dz-p6__fcard p{position:absolute;left:32px;top:76px;font-size:14px;line-height:1.5;letter-spacing:-.14px;color:rgba(255,255,255,.55);white-space:nowrap}
+.dz-p6__phone{position:absolute;left:61px;top:179px;width:240px;height:205px;overflow:hidden;filter:drop-shadow(0 0 2.2px rgba(0,0,0,.06)) drop-shadow(0 5px 9.5px rgba(0,0,0,.08))}
+.dz-p6__bezel{position:absolute;left:0;top:0;width:240px;height:253px;border-radius:32px;overflow:hidden}
+.dz-p6__bezel::after{content:'';position:absolute;inset:0;border:8px solid #2e2e2e;border-radius:32px}
+.dz-p6__screen{position:absolute;inset:0;overflow:hidden;border-radius:32px}
+.dz-p6__screen img{position:absolute;left:0;width:100%;height:206.24%;max-width:none}
+.dz-p6__flow{position:absolute;left:0;top:2247px;width:1280px;height:234px}
+.dz-p6__fl-t{font-weight:600;font-size:18px;line-height:1;letter-spacing:-.18px;white-space:nowrap}
+.dz-p6__fl-d{font-weight:400;font-size:14px;line-height:1.5;letter-spacing:-.14px;opacity:.7;white-space:nowrap}
+.dz-p6__dot{top:112px;width:10px;height:10px;border-radius:50%}
+.dz-p6__typo{position:absolute;left:70px;top:2629px;width:1018px;height:415px}
+.dz-p6__g{font-weight:600;line-height:1;white-space:nowrap}
+.dz-p6__fontname{left:867px;top:calc(203px - 8px);font-weight:400;font-size:20px;line-height:1.5;letter-spacing:-.2px;opacity:.5;white-space:nowrap}
+.dz-p6__typo-l{left:0;top:calc(0px - .1485em);font-weight:600;font-size:16px;line-height:1;letter-spacing:-.48px}
+.dz-p6__big{left:0;top:calc(319px - 29.85px);font-weight:500;font-size:100px;line-height:1.3;letter-spacing:-3px;white-space:nowrap}
+.dz-p6__ds-l{left:69px;top:3164px;height:35px}
+.dz-p6__sw{top:3279px;width:305px;height:228px;border-radius:16px;color:#000}
+.dz-p6__sw p{position:absolute;left:27px;line-height:1;white-space:nowrap}
+.dz-p6__sw-n{top:calc(22px - .1485em);font-weight:700;font-size:26px;letter-spacing:-.26px}
+.dz-p6__sw-r{top:calc(54px - .1485em);font-weight:700;font-size:16px;letter-spacing:-.16px;color:#191919;opacity:.5}
+.dz-p6__sw-h{top:calc(192px - .1485em);font-weight:600;font-size:20px;letter-spacing:-.2px}
+.dz-p6__bar{top:3587px;width:208px;height:20px}
+.dz-p6__bar--b{box-shadow:inset 0 0 0 .3px rgba(255,255,255,.5)}
+.dz-p6__bar-l{top:3616.15px;font-weight:500;font-size:14px;line-height:1.3;letter-spacing:-.14px;opacity:.5;white-space:nowrap}
+.dz-p6__bl-l{left:70px;top:3849px;height:35px}
+.dz-p6__gal{position:absolute;left:120px;top:3979px;width:1040px;height:908px}
+.dz-p6__gbox{width:504px;height:390px;border-radius:16px;overflow:hidden}
+.dz-p6__cover{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
