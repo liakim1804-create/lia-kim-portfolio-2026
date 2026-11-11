@@ -1,6 +1,6 @@
 :root {
   color-scheme: dark;
-  --background: #0f0f0f;
+  --background: #0b0e13;
   --foreground: #ffffff;
   --muted: rgba(255, 255, 255, 0.5);
   --rule: rgba(255, 255, 255, 0.5);
@@ -205,7 +205,7 @@ dd {
   justify-content: center;
   width: 287.502px;
   height: 383.336px;
-  background: #353535;
+  background: #262b33;
   font-size: calc(14px / var(--site-scale, 1));
   line-height: 1.24;
 }
@@ -272,7 +272,7 @@ dd {
   width: 747px;
   height: 472px;
   overflow: hidden;
-  background: #353535;
+  background: #262b33;
 }
 
 .project-image > img {
@@ -285,7 +285,7 @@ dd {
 .project--dipz { top: 309px; }
 .project--dipz .project-meta { left: 1123px; }
 .project--dipz .project-image { top: 60px; left: 1123px; }
-.project-image--dipz { display: flex; align-items: center; justify-content: center; background: #191919; }
+.project-image--dipz { display: flex; align-items: center; justify-content: center; background: #141920; }
 .project-image--dipz > img { width: 189.998px; height: 196.564px; object-fit: contain; }
 
 .project--momen { top: 1081px; }
@@ -324,7 +324,7 @@ dd {
 
 .contact-list {
   position: absolute;
-  top: 347px;
+  bottom: 122px;
   left: 356px;
   width: 747px;
   font-style: normal;
@@ -403,6 +403,6 @@ dd {
   -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
   transition: background 0.3s, color 0.3s;
 }
-.to-top-fixed:hover { background: #fff; color: #0f0f0f; }
+.to-top-fixed:hover { background: #fff; color: #0b0e13; }
 @media (max-width: 700px) { .to-top-fixed { right: 16px; bottom: 16px; } }
 .to-top-fixed .ico { display: block; flex: 0 0 auto; }

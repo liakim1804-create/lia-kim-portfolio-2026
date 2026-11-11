@@ -1,9 +1,9 @@
 :root {
   color-scheme: dark;
-  --background: #0f0f0f;
+  --background: #0b0e13;
   --foreground: #ffffff;
   --muted: rgba(255, 255, 255, 0.5);
-  --surface: #191919;
+  --surface: #141920;
   /* 메인과 동일한 텍스트 위계: small 16 / display 112(max) — 이 두 단계만 사용 */
   --fs-small: 14px;
   --fs-display: clamp(32px, 5.834vw, 112px);
