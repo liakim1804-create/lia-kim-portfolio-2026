@@ -7,6 +7,40 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <header class="bar small-copy">
+      <a class="bar__logo" href="#top">LIA KIM</a>
+      <nav class="bar__nav" aria-label="Main">
+        <a href="#works">Works</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <!-- INTRO: 제목만 먼저 → 스크롤하면 카드가 아래에서 한 장씩 올라와 쌓임 (Savee "Scroll cards" 구조) -->
+    <section class="intro" id="top" aria-label="Intro">
+      <div class="intro__stage">
+        <div class="intro__text">
+          <h1 class="intro__title">LIA'S ARCHIVE</h1>
+          <p class="intro__sub intro__sub--center small-copy" aria-hidden="true">Portfolio 2026 — Selected<br />Works and Design Studies.</p>
+          <p class="intro__sub intro__sub--final small-copy">Portfolio 2026 — Selected<br />Works and Design Studies.</p>
+        </div>
+        <div class="intro__cards">
+          <a class="icard" href="dipz.html" aria-label="DipZ">
+            <span class="icard__img icard__img--mark"><img src="assets/dipz-mark.svg" alt="DipZ project mark" /></span>
+          </a>
+          <a class="icard" href="momen.html" aria-label="Momen">
+            <span class="icard__img icard__img--momen"><img src="assets/momen.webp" alt="Momen project preview" /></span>
+          </a>
+          <a class="icard" href="parallax.html" aria-label="Parallax">
+            <span class="icard__img"><img src="assets/parallax.webp" alt="Parallax project preview" /></span>
+          </a>
+          <a class="icard" href="#project-polaroid" aria-label="Polaroid Brand Campaign">
+            <span class="icard__img icard__img--polaroid"><img src="assets/polaroid.webp" alt="Polaroid brand campaign preview" /></span>
+          </a>
+        </div>
+      </div>
+    </section>
+
     <main class="viewport" aria-label="Lia Kim Portfolio">
       <div class="site" data-node-id="454:1271">
         <div class="rule rule--vertical" aria-hidden="true"></div>
@@ -14,24 +48,6 @@
         <div class="rule rule--works" aria-hidden="true"></div>
         <div class="rule rule--contact" aria-hidden="true"></div>
         <div class="rule rule--footer" aria-hidden="true"></div>
-
-        <header id="top">
-          <p class="identity small-copy">Lia Kim<br />UI/UX Designer</p>
-          <p class="edition small-copy">Portfolio 2026 — Selected Works<br />and Design Studies.</p>
-
-          <nav class="index small-copy" aria-label="Portfolio index">
-            <a class="index-row index-row--section" href="#about"><span>01</span><span>About</span></a>
-            <a class="index-row index-row--section" href="#works"><span>02</span><span>Works (4)</span></a>
-            <a class="index-row index-row--project" href="dipz.html"><span>DipZ</span><span>Service Design</span></a>
-            <a class="index-row index-row--project" href="momen.html"><span>Momen</span><span>Service Design</span></a>
-            <a class="index-row index-row--project" href="#project-parallax"><span>Parallax</span><span>Service Design</span></a>
-            <a class="index-row index-row--project" href="#project-polaroid"><span>Polaroid Brand Campaign</span><span>Visual Design</span></a>
-            <a class="index-row index-row--section index-row--last" href="#contact"><span>03</span><span>Contact</span></a>
-          </nav>
-
-          <h1 class="display-title hero-title">PORTFOLIO</h1>
-        </header>
-
         <section id="about" aria-labelledby="about-heading">
           <span class="section-number small-copy">01</span>
           <h2 id="about-heading" class="display-title about-title">ABOUT</h2>
@@ -80,10 +96,9 @@
               <p class="project-title">PARALLAX<span>Service Design · Team Project</span></p>
               <p class="project-year">2026</p>
             </div>
-            <div class="project-image project-image--parallax">
+            <a class="project-image project-image--parallax" href="parallax.html" aria-label="PARALLAX 상세 보기">
               <img src="assets/parallax.webp" alt="Parallax service design project" />
-              <span class="parallax-wordmark">PARALLAX</span>
-            </div>
+            </a>
           </article>
 
           <article class="project project--polaroid" id="project-polaroid">

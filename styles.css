@@ -4,6 +4,7 @@
   --foreground: #ffffff;
   --muted: rgba(255, 255, 255, 0.5);
   --rule: rgba(255, 255, 255, 0.5);
+  --hx: -910px; /* 히어로 하단 여백(첫 화면에서 아래 구분선이 안 보이도록) */
 }
 
 * {
@@ -39,7 +40,7 @@ dd {
 .viewport {
   position: relative;
   width: 100%;
-  height: 5648px;
+  height: 4738px;
   overflow: hidden;
   background: var(--background);
 }
@@ -49,7 +50,7 @@ dd {
   top: 0;
   left: 50%;
   width: 1920px;
-  height: 5648px;
+  height: 4738px;
   transform: translateX(-50%);
   transform-origin: top center;
   overflow: hidden;
@@ -83,10 +84,10 @@ dd {
 }
 
 .rule--vertical {
-  top: 0;
+  top: calc(1010px + var(--hx));
   left: 337px;
   width: 0.3px;
-  height: 5648px;
+  height: 4638px;
 }
 
 .rule--hero,
@@ -98,81 +99,129 @@ dd {
   height: 0.3px;
 }
 
-.rule--hero { top: 1010px; }
-.rule--works { top: 1905px; }
-.rule--contact { top: 5082px; }
-.rule--footer { top: 5546px; }
+.rule--hero { top: calc(1010px + var(--hx)); }
+.rule--works { top: calc(1905px + var(--hx)); }
+.rule--contact { top: calc(5082px + var(--hx)); }
+.rule--footer { top: calc(5546px + var(--hx)); }
 
-.identity {
-  position: absolute;
-  top: 62px;
-  left: 50px;
-}
+/* 캔버스 밖 요소도 사이트 폰트·굵기·크기 그대로 (작은 텍스트 14px/300, 제목 400) */
+.bar, .intro { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 300; }
+.bar .small-copy, .bar a { font-size: 14px; font-weight: 400; }
+.intro .small-copy { font-size: 14px; font-weight: 300; }
 
-.edition {
-  position: absolute;
-  top: 62px;
-  left: 357px;
-}
-
-.index {
-  position: absolute;
-  top: 220px;
-  left: 970px;
-  width: 900px;
-  line-height: 1;
-}
-
-.index-row {
-  display: grid;
-  align-items: center;
-  width: 900px;
-  height: max(32.3px, calc(2.3 * 14px / var(--site-scale, 1)));
-  border-bottom: 0.3px solid var(--rule);
-}
-
-.index-row--section {
-  grid-template-columns: 154px 1fr;
-}
-
-.index-row--project {
-  position: relative;
-  grid-template-columns: 405px 103px;
-  margin-left: 306px;
-  width: 508px;
+/* ---------- fixed nav ---------- */
+.bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 80;
+  display: flex;
+  align-items: flex-start;
   justify-content: space-between;
-  border-bottom: 0;
+  padding: min(3.2292vw, 62px) clamp(16px, 2.6vw, 50px) 12px;
+  line-height: 1.24;
+  background: var(--background);
 }
+.bar a { transition: color 0.3s; }
+.bar a:hover { color: var(--muted); }
+.bar__nav { display: flex; gap: 48px; }
+@media (max-width: 700px) { .bar__nav { gap: 24px; } }
 
-.index-row--project::after {
-  content: "";
+/* ---------- intro scene: 제목은 좌측 상단, 카드 4장이 아래에서 한 장씩 올라와 한 줄로 정렬 ---------- */
+.intro {
+  --g: clamp(16px, 2.6vw, 50px);
+  --gap: 20px;
+  --cw: calc((100vw - var(--g) * 2 - var(--gap) * 3) / 4);
+  position: relative;
+  z-index: 2;
+  height: 100vh;
+  min-height: 620px;
+}
+.intro__stage { position: relative; height: 100%; overflow: hidden; }
+.intro__text {
   position: absolute;
-  left: -306px;
-  width: 904px;
-  height: max(32.3px, calc(2.3 * 14px / var(--site-scale, 1)));
-  border-bottom: 0.3px solid var(--rule);
+  left: var(--g);
+  top: clamp(104px, 14vh, 170px);
+  display: grid;
+  justify-items: start;
+  gap: 20px;
+  text-align: left;
 }
-
-.index-row--project { cursor: pointer; transition: color 0.3s; }
-.index-row--project:hover { color: var(--muted); }
-
-.index-row--project span:last-child {
-  text-align: right;
+.intro__title {
+  margin: 0;
+  font-size: clamp(40px, 5.834vw, 112px);
+  line-height: 1;
+  font-weight: 400;
+  letter-spacing: -0.03em;
   white-space: nowrap;
 }
+.intro__sub { margin: 0; line-height: 1.5; }
+.intro__cards { position: absolute; inset: 0; }
+.icard {
+  position: absolute;
+  top: clamp(290px, 42vh, 460px);
+  left: calc(var(--g) + var(--i, 0) * (var(--cw) + var(--gap)));
+  width: var(--cw);
+  display: block;
+  background: #191919;
+}
+.icard:nth-child(1) { --i: 0; }
+.icard:nth-child(2) { --i: 1; }
+.icard:nth-child(3) { --i: 2; }
+.icard:nth-child(4) { --i: 3; }
+.icard__img { position: relative; display: block; width: 100%; overflow: hidden; background: #191919; }
+.icard:nth-child(1) .icard__img { aspect-ratio: 1 / 1.32; }
+.icard:nth-child(2) .icard__img { aspect-ratio: 1 / 1; }
+.icard:nth-child(3) .icard__img { aspect-ratio: 1 / 1.18; }
+.icard:nth-child(4) .icard__img { aspect-ratio: 1 / 0.78; }
+.icard__img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1); }
+.icard__img--mark img { object-fit: contain; padding: 24% 28%; box-sizing: border-box; }
+.icard__img--momen img { object-position: 78% 50%; }
+.icard__img--polaroid img { object-position: 52% 50%; }
+.icard:hover .icard__img img { transform: scale(1.04); }
+/* 로드 연출: 제목이 먼저 뜬 뒤 카드가 아래에서 한 장씩 올라옴 */
+/* 1) 텍스트가 화면 중앙에 먼저 뜸 → 2) 좌측 상단 제자리로 이동하며 → 3) 카드가 한 장씩 올라옴 */
+.intro__sub--center, .intro__sub--final { grid-area: 2 / 1; }
+.intro__sub--center { text-align: center; justify-self: stretch; }
+.intro__text { animation: intro-text 3.3s both; }
+@keyframes intro-text {
+  0%   { opacity: 0; left: 50%; top: 50%; transform: translate(-50%, -38%); animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1); }
+  26%  { opacity: 1; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+  58%  { opacity: 1; left: 50%; top: 50%; transform: translate(-50%, -50%); animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
+  100% { opacity: 1; left: var(--g); top: clamp(104px, 14vh, 170px); transform: translate(0, 0); }
+}
+.intro__sub--center { animation: sub-center 3.3s both; }
+.intro__sub--final { animation: sub-final 3.3s both; }
+@keyframes sub-center { 0%, 58% { opacity: 1; } 72%, 100% { opacity: 0; } }
+@keyframes sub-final { 0%, 66% { opacity: 0; } 100% { opacity: 1; } }
+.icard {
+  opacity: 0;
+  transform: translateY(70vh);
+  animation: icard-rise 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: calc(2.5s + var(--i, 0) * 0.45s); /* 텍스트가 이동하기 시작한 뒤 한 장씩 */
+}
+@keyframes icard-rise { from { opacity: 0; transform: translateY(70vh); } 25% { opacity: 1; } to { opacity: 1; transform: none; } }
 
-.index-row--last {
-  border-bottom: 0;
+@media (max-width: 700px) {
+  .intro { --cw: calc((100vw - var(--g) * 2 - var(--gap)) / 2); }
+  .icard:nth-child(3) { --i: 0; top: calc(clamp(290px, 42vh, 460px) + var(--cw) * 1.4); }
+  .icard:nth-child(4) { --i: 1; top: calc(clamp(290px, 42vh, 460px) + var(--cw) * 1.4); }
 }
 
-.hero-title {
-  top: 882px;
-  left: 1274px;
+@media (prefers-reduced-motion: reduce) {
+  .intro { height: auto; }
+  .intro__stage { position: relative; height: auto; padding: 160px var(--g) 80px; }
+  .intro__text { position: relative; left: auto; top: auto; padding: 0 0 56px; }
+  .intro__cards { position: relative; inset: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
+  .icard { position: relative; left: auto; top: auto; width: auto; transform: none !important; opacity: 1 !important; animation: none !important; }
+  .intro__text, .intro__sub--center, .intro__sub--final { animation: none; }
+  .intro__sub--center { display: none; }
 }
 
 #about {
   position: absolute;
-  inset: 1010px 0 auto;
+  inset: calc(1010px + var(--hx)) 0 auto;
   height: 895px;
 }
 
@@ -234,7 +283,7 @@ dd {
 
 #works {
   position: absolute;
-  inset: 1905px 0 auto;
+  inset: calc(1905px + var(--hx)) 0 auto;
   height: 3177px;
 }
 
@@ -314,7 +363,7 @@ dd {
 
 #contact {
   position: absolute;
-  inset: 5082px 0 auto;
+  inset: calc(5082px + var(--hx)) 0 auto;
   height: 566px;
 }
 

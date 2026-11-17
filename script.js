@@ -1,5 +1,5 @@
 const DESIGN_WIDTH = 1920;
-const DESIGN_HEIGHT = 5648;
+const DESIGN_HEIGHT = 4738;
 
 function fitCanvas() {
   const viewport = document.querySelector('.viewport');
@@ -27,7 +27,11 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
     if (!target) return;
 
     event.preventDefault();
-    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // 고정 메뉴바 높이만큼 띄워서 섹션 제목이 가려지거나 잘리지 않게
+    const bar = document.querySelector('.bar');
+    const offset = bar ? bar.offsetHeight : 0;
+    const top = link.getAttribute('href') === '#top' ? 0 : target.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
   });
 });
 
