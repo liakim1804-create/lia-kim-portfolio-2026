@@ -28,8 +28,7 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
 
     event.preventDefault();
     // 고정 메뉴바 높이만큼 띄워서 섹션 제목이 가려지거나 잘리지 않게
-    const bar = document.querySelector('.bar');
-    const offset = bar ? bar.offsetHeight : 0;
+    const offset = 0; // 스크롤하면 메뉴바가 숨겨지므로 가려질 일이 없음
     const top = link.getAttribute('href') === '#top' ? 0 : target.getBoundingClientRect().top + window.scrollY - offset;
     window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
   });
@@ -66,3 +65,12 @@ const revealObserver = new IntersectionObserver(
 );
 
 revealTargets.forEach((target) => revealObserver.observe(target));
+
+/* ---------- 메뉴바: 스크롤하면 숨김, 맨 위에서만 표시 ---------- */
+(() => {
+  const bar = document.querySelector('.bar');
+  if (!bar) return;
+  const update = () => bar.classList.toggle('is-hidden', window.scrollY > 40);
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();

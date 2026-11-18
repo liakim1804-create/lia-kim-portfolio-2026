@@ -124,6 +124,8 @@ dd {
   background: var(--background);
 }
 .bar a { transition: color 0.3s; }
+.bar { transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s; }
+.bar.is-hidden { transform: translateY(-100%); opacity: 0; pointer-events: none; } /* 스크롤하면 메뉴바 숨김 (TOP 버튼이 대신함) */
 .bar a:hover { color: var(--muted); }
 .bar__nav { display: flex; gap: 48px; }
 @media (max-width: 700px) { .bar__nav { gap: 24px; } }

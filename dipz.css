@@ -45,6 +45,9 @@ img { display: block; max-width: 100%; }
   pointer-events: none;
 }
 .bar a { pointer-events: auto; line-height: 1.24; font-weight: 400; }
+.bar { transition: opacity 0.3s; }
+.bar.is-hidden { opacity: 0; }
+.bar.is-hidden a { pointer-events: none; }
 .bar a:hover { color: var(--muted); }
 
 /* ---------- hero ---------- */

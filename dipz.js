@@ -37,3 +37,12 @@ document.querySelectorAll('a[href^="#"]').forEach((link) => {
   window.addEventListener('load', apply);
   if ('ResizeObserver' in window) new ResizeObserver(apply).observe(stage);
 })();
+
+/* 상단 로고: 스크롤하면 숨김, 맨 위에서만 표시 (TOP 버튼이 대신함) */
+(() => {
+  const bar = document.querySelector('.bar');
+  if (!bar) return;
+  const update = () => bar.classList.toggle('is-hidden', window.scrollY > 40);
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+})();
