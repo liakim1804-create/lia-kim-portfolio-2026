@@ -4,7 +4,7 @@
   --foreground: #ffffff;
   --muted: rgba(255, 255, 255, 0.5);
   --rule: rgba(255, 255, 255, 0.5);
-  --hx: -910px; /* 히어로 하단 여백(첫 화면에서 아래 구분선이 안 보이도록) */
+  --hx: 0px; /* 히어로 하단 여백(첫 화면에서 아래 구분선이 안 보이도록) */
 }
 
 * {
@@ -40,7 +40,7 @@ dd {
 .viewport {
   position: relative;
   width: 100%;
-  height: 4738px;
+  height: 5153px;
   overflow: hidden;
   background: var(--background);
 }
@@ -50,7 +50,7 @@ dd {
   top: 0;
   left: 50%;
   width: 1920px;
-  height: 4738px;
+  height: 5153px;
   transform: translateX(-50%);
   transform-origin: top center;
   overflow: hidden;
@@ -83,31 +83,24 @@ dd {
   opacity: 0.6;
 }
 
-.rule--vertical {
-  top: calc(1010px + var(--hx));
-  left: 337px;
-  width: 0.3px;
-  height: 4638px;
-}
 
 .rule--hero,
 .rule--works,
 .rule--contact,
 .rule--footer {
-  left: 0;
-  width: 1920px;
+  left: 50px;
+  width: 1820px;
   height: 0.3px;
 }
 
 .rule--hero { top: calc(1010px + var(--hx)); }
-.rule--works { top: calc(1905px + var(--hx)); }
-.rule--contact { top: calc(5082px + var(--hx)); }
-.rule--footer { top: calc(5546px + var(--hx)); }
+.rule--works { top: calc(1865px + var(--hx)); }
+.rule--contact { top: calc(4587px + var(--hx)); }
+.rule--footer { top: calc(5051px + var(--hx)); }
 
 /* 캔버스 밖 요소도 사이트 폰트·굵기·크기 그대로 (작은 텍스트 14px/300, 제목 400) */
-.bar, .intro { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 300; }
+.bar { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight: 300; }
 .bar .small-copy, .bar a { font-size: 14px; font-weight: 400; }
-.intro .small-copy { font-size: 14px; font-weight: 300; }
 
 /* ---------- fixed nav ---------- */
 .bar {
@@ -121,7 +114,7 @@ dd {
   justify-content: space-between;
   padding: min(3.2292vw, 62px) clamp(16px, 2.6vw, 50px) 12px;
   line-height: 1.24;
-  background: var(--background);
+  background: transparent;
 }
 .bar a { transition: color 0.3s; }
 .bar { transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s; }
@@ -130,101 +123,80 @@ dd {
 .bar__nav { display: flex; gap: 48px; }
 @media (max-width: 700px) { .bar__nav { gap: 24px; } }
 
-/* ---------- intro scene: 제목은 좌측 상단, 카드 4장이 아래에서 한 장씩 올라와 한 줄로 정렬 ---------- */
-.intro {
-  --g: clamp(16px, 2.6vw, 50px);
-  --gap: 20px;
-  --cw: calc((100vw - var(--g) * 2 - var(--gap) * 3) / 4);
-  position: relative;
-  z-index: 2;
-  height: 100vh;
-  min-height: 620px;
-}
-.intro__stage { position: relative; height: 100%; overflow: hidden; }
-.intro__text {
+/* ---------- hero (원래 사이트와 동일: 인덱스 표 + 큰 타이틀) ---------- */
+.identity {
   position: absolute;
-  left: var(--g);
-  top: clamp(104px, 14vh, 170px);
-  display: grid;
-  justify-items: start;
-  gap: 20px;
-  text-align: left;
+  top: calc(62px + 17.36px / var(--site-scale, 1)); /* 고정 메뉴바 로고(LIA KIM) 바로 아래 줄 */
+  left: 50px;
 }
-.intro__title {
-  margin: 0;
-  font-size: clamp(40px, 5.834vw, 112px);
+
+.edition {
+  position: absolute;
+  top: calc(62px + 70px / var(--site-scale, 1));
+  left: 50px;
+}
+
+.index {
+  position: absolute;
+  top: 220px;
+  left: 970px;
+  width: 900px;
   line-height: 1;
-  font-weight: 400;
-  letter-spacing: -0.03em;
+}
+
+.index-row {
+  display: grid;
+  align-items: center;
+  width: 900px;
+  height: max(32.3px, calc(2.3 * 14px / var(--site-scale, 1)));
+  border-bottom: 0.3px solid var(--rule);
+}
+
+.index-row--section {
+  grid-template-columns: 154px 1fr;
+}
+
+.index-row--project {
+  position: relative;
+  grid-template-columns: 405px 103px;
+  margin-left: 306px;
+  width: 508px;
+  justify-content: space-between;
+  border-bottom: 0;
+}
+
+.index-row--project::after {
+  content: "";
+  position: absolute;
+  left: -306px;
+  width: 904px;
+  height: max(32.3px, calc(2.3 * 14px / var(--site-scale, 1)));
+  border-bottom: 0.3px solid var(--rule);
+}
+
+.index-row--project { cursor: pointer; transition: color 0.3s; }
+.index-row--project:hover { color: var(--muted); }
+
+.index-row--project span:last-child {
+  text-align: right;
   white-space: nowrap;
 }
-.intro__sub { margin: 0; line-height: 1.5; }
-.intro__cards { position: absolute; inset: 0; }
-.icard {
-  position: absolute;
-  top: clamp(290px, 42vh, 460px);
-  left: calc(var(--g) + var(--i, 0) * (var(--cw) + var(--gap)));
-  width: var(--cw);
-  display: block;
-  background: #191919;
-}
-.icard:nth-child(1) { --i: 0; }
-.icard:nth-child(2) { --i: 1; }
-.icard:nth-child(3) { --i: 2; }
-.icard:nth-child(4) { --i: 3; }
-.icard__img { position: relative; display: block; width: 100%; overflow: hidden; background: #191919; }
-.icard:nth-child(1) .icard__img { aspect-ratio: 1 / 1.32; }
-.icard:nth-child(2) .icard__img { aspect-ratio: 1 / 1; }
-.icard:nth-child(3) .icard__img { aspect-ratio: 1 / 1.18; }
-.icard:nth-child(4) .icard__img { aspect-ratio: 1 / 0.78; }
-.icard__img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1); }
-.icard__img--mark img { object-fit: contain; padding: 24% 28%; box-sizing: border-box; }
-.icard__img--momen img { object-position: 78% 50%; }
-.icard__img--polaroid img { object-position: 52% 50%; }
-.icard:hover .icard__img img { transform: scale(1.04); }
-/* 로드 연출: 제목이 먼저 뜬 뒤 카드가 아래에서 한 장씩 올라옴 */
-/* 1) 텍스트가 화면 중앙에 먼저 뜸 → 2) 좌측 상단 제자리로 이동하며 → 3) 카드가 한 장씩 올라옴 */
-.intro__sub--center, .intro__sub--final { grid-area: 2 / 1; }
-.intro__sub--center { text-align: center; justify-self: stretch; }
-.intro__text { animation: intro-text 3.3s both; }
-@keyframes intro-text {
-  0%   { opacity: 0; left: 50%; top: 50%; transform: translate(-50%, -38%); animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1); }
-  26%  { opacity: 1; left: 50%; top: 50%; transform: translate(-50%, -50%); }
-  58%  { opacity: 1; left: 50%; top: 50%; transform: translate(-50%, -50%); animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1); }
-  100% { opacity: 1; left: var(--g); top: clamp(104px, 14vh, 170px); transform: translate(0, 0); }
-}
-.intro__sub--center { animation: sub-center 3.3s both; }
-.intro__sub--final { animation: sub-final 3.3s both; }
-@keyframes sub-center { 0%, 58% { opacity: 1; } 72%, 100% { opacity: 0; } }
-@keyframes sub-final { 0%, 66% { opacity: 0; } 100% { opacity: 1; } }
-.icard {
-  opacity: 0;
-  transform: translateY(70vh);
-  animation: icard-rise 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: calc(2.5s + var(--i, 0) * 0.45s); /* 텍스트가 이동하기 시작한 뒤 한 장씩 */
-}
-@keyframes icard-rise { from { opacity: 0; transform: translateY(70vh); } 25% { opacity: 1; } to { opacity: 1; transform: none; } }
 
-@media (max-width: 700px) {
-  .intro { --cw: calc((100vw - var(--g) * 2 - var(--gap)) / 2); }
-  .icard:nth-child(3) { --i: 0; top: calc(clamp(290px, 42vh, 460px) + var(--cw) * 1.4); }
-  .icard:nth-child(4) { --i: 1; top: calc(clamp(290px, 42vh, 460px) + var(--cw) * 1.4); }
+.index-row--last {
+  border-bottom: 0;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .intro { height: auto; }
-  .intro__stage { position: relative; height: auto; padding: 160px var(--g) 80px; }
-  .intro__text { position: relative; left: auto; top: auto; padding: 0 0 56px; }
-  .intro__cards { position: relative; inset: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; }
-  .icard { position: relative; left: auto; top: auto; width: auto; transform: none !important; opacity: 1 !important; animation: none !important; }
-  .intro__text, .intro__sub--center, .intro__sub--final { animation: none; }
-  .intro__sub--center { display: none; }
+.hero-title {
+  top: 882px;
+  left: auto;
+  right: 50px;
+  white-space: nowrap;
 }
 
 #about {
   position: absolute;
   inset: calc(1010px + var(--hx)) 0 auto;
-  height: 895px;
+  height: 855px;
 }
 
 .section-number {
@@ -233,46 +205,47 @@ dd {
 }
 
 #about .section-number { top: 16px; }
-.about-title { top: 16px; left: 357px; }
+.about-title { top: 28px; left: 50px; }
 
+.about-left { position: absolute; top: 300px; left: 1050px; width: 450px; }
 .about-intro {
-  position: absolute;
-  top: 239px;
-  left: 970px;
+  margin: 0 0 130px;
   width: 340px;
   font-family: Pretendard, "Apple SD Gothic Neo", sans-serif;
   font-size: calc(14px / var(--site-scale, 1));
   line-height: 1.72;
   font-weight: 300;
-  letter-spacing: -0.32px;
+  letter-spacing: -0.02em;
+  word-break: keep-all;
+  text-wrap: balance;
+  color: #fff;
 }
 
 .profile-placeholder {
-  position: absolute;
-  top: 239.332px;
-  left: 1583px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 287.502px;
-  height: 383.336px;
+  position: absolute;
+  top: 300px;
+  left: 660px;
+  width: 287.5px;
+  height: 383.3px;
+  border-radius: 8px;
   background: #353535;
   font-size: calc(14px / var(--site-scale, 1));
   line-height: 1.24;
 }
 
 .about-facts {
-  position: absolute;
-  top: 542px;
-  left: 970px;
+  position: relative;
   width: max-content;
-  min-width: 440px;
+  min-width: 450px;
   line-height: 1;
 }
 
 .about-facts > div {
   display: grid;
-  grid-template-columns: 197px 1fr;
+  grid-template-columns: 110px 1fr;
   align-items: center;
   height: max(32.3px, calc(2.3 * 14px / var(--site-scale, 1)));
   border-bottom: 0.3px solid var(--rule);
@@ -285,12 +258,75 @@ dd {
 
 #works {
   position: absolute;
-  inset: calc(1905px + var(--hx)) 0 auto;
-  height: 3177px;
+  inset: calc(1865px + var(--hx)) 0 auto;
+  height: 2722px;
 }
 
-#works > .section-number { top: 26px; }
-.works-title { top: 16px; left: 357px; }
+/* ---------- works: DFY 스타일 — 필터 + 2열 큰 카드(4:3) + 제목/설명/태그 ---------- */
+.works-body { position: absolute; top: 247px; left: 0; width: 1920px; }
+.works-filter {
+  position: relative;
+  margin-left: 1350px;
+  margin-bottom: 150px; /* 위(WORKS와) 간격 = 아래(카드와) 간격 */
+  width: 520px;
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+.works-filter button {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  width: 520px;
+  height: max(32.3px, calc(2.3 * 14px / var(--site-scale, 1)));
+  border-bottom: 0.3px solid var(--rule);
+  color: var(--muted);
+  font: inherit;
+  transition: color 0.3s;
+}
+.works-filter button:hover, .works-filter button.is-active { color: #fff; }
+.works-filter button:last-child { border-bottom: 0; }
+.works-grid {
+  position: relative;
+  margin-left: 50px;
+  width: 1820px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+.works-col { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 90px; }
+.works-col--b { margin-top: 380px; } /* DFY처럼 오른쪽 열을 아래로 어긋나게 → 지그재그 */
+.wcard2 { display: block; }
+.wcard2[hidden] { display: none; }
+.works-grid.is-refresh .wcard2 { animation: wfade .5s ease backwards; }
+@keyframes wfade { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.wthumb { position: relative; display: block; width: 100%; aspect-ratio: 100 / 75; overflow: hidden; border-radius: 8px; background: #191919; }
+.wthumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1); }
+.wthumb--mark img { object-fit: contain; padding: 22% 38%; box-sizing: border-box; }
+.wthumb--momen img { object-position: 78% 50%; }
+.wthumb--polaroid img { object-position: 52% 50%; }
+/* 호버: 이미지 확대 대신 카드 전체가 살짝 작아짐 */
+.wcard2 { transition: transform .6s cubic-bezier(.22, 1, .36, 1); transform-origin: 50% 40%; }
+.wthumb { transition: border-radius .6s cubic-bezier(.22, 1, .36, 1), clip-path 1.1s cubic-bezier(.22, 1, .36, 1); }
+.wthumb::after { content: ''; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.45); opacity: 0; transition: opacity .5s ease; pointer-events: none; }
+a.wcard2:hover .wthumb::after { opacity: 1; }
+/* 스크롤 등장: 썸네일이 아래에서 열리듯 나타나고 텍스트가 이어서 올라옴 */
+.works-grid.is-armed .wcard2:not(.in) .wthumb { clip-path: inset(100% 0 0 0); }
+.works-grid.is-armed .wcard2:not(.in) .wmeta { opacity: 0; transform: translateY(20px); }
+.wmeta { transition: opacity .8s ease .35s, transform .8s cubic-bezier(.22, 1, .36, 1) .35s; }
+.wcard2 .wthumb img { transition: transform 1.4s cubic-bezier(.22, 1, .36, 1); }
+.works-grid.is-armed .wcard2:not(.in) .wthumb img { transform: scale(1.25); }
+.wmeta { display: grid; gap: calc(14px / var(--site-scale, 1)); margin-top: calc(14px / var(--site-scale, 1)); line-height: 1.24; }
+.wmeta strong { font-weight: 400; color: #fff; }
+.wmeta__desc { color: var(--muted); }
+.wmeta__tags { display: flex; flex-wrap: wrap; gap: calc(6px / var(--site-scale, 1)); }
+.wmeta__tags span { font-size: calc(12px / var(--site-scale, 1)); line-height: 1; padding: calc(6px / var(--site-scale, 1)) calc(9px / var(--site-scale, 1)); border-radius: calc(4px / var(--site-scale, 1)); background: rgba(255, 255, 255, 0.14); color: rgba(255, 255, 255, 0.7); }
+
+#works > .section-number { top: 16px; }
+.works-title { top: 28px; left: 50px; }
 
 .project {
   position: absolute;
@@ -334,18 +370,18 @@ dd {
 }
 
 .project--dipz { top: 309px; }
-.project--dipz .project-meta { left: 1123px; }
-.project--dipz .project-image { top: 60px; left: 1123px; }
+.project--dipz .project-meta { left: 357px; }
+.project--dipz .project-image { top: 60px; left: 357px; }
 .project-image--dipz { display: flex; align-items: center; justify-content: center; background: #191919; }
 .project-image--dipz > img { width: 189.998px; height: 196.564px; object-fit: contain; }
 
-.project--momen { top: 1081px; }
-.project--momen .project-meta { left: 357px; }
-.project--momen .project-image { top: 60px; left: 357px; }
+.project--momen { top: 309px; }
+.project--momen .project-meta { left: 1123px; }
+.project--momen .project-image { top: 60px; left: 1123px; }
 
-.project--parallax { top: 1853px; }
-.project--parallax .project-meta { left: 1123px; }
-.project--parallax .project-image { top: 60px; left: 1123px; }
+.project--parallax { top: 961px; }
+.project--parallax .project-meta { left: 357px; }
+.project--parallax .project-image { top: 60px; left: 357px; }
 .project-image--parallax > img { object-position: bottom; }
 
 .parallax-wordmark {
@@ -359,24 +395,24 @@ dd {
   font-weight: 400;
 }
 
-.project--polaroid { top: 2625px; }
-.project--polaroid .project-meta { left: 357px; }
-.project--polaroid .project-image { top: 60px; left: 357px; }
+.project--polaroid { top: 961px; }
+.project--polaroid .project-meta { left: 1123px; }
+.project--polaroid .project-image { top: 60px; left: 1123px; }
 
 #contact {
   position: absolute;
-  inset: calc(5082px + var(--hx)) 0 auto;
+  inset: calc(4587px + var(--hx)) 0 auto;
   height: 566px;
 }
 
 #contact > .section-number { top: 16px; }
-.contact-name { position: absolute; top: 16px; left: 357px; }
+.contact-name { position: absolute; top: 28px; left: 50px; }
 .contact-title { top: 16px; left: 1371px; }
 
 .contact-list {
   position: absolute;
   bottom: 122px;
-  left: 356px;
+  left: 50px;
   width: 747px;
   font-style: normal;
   line-height: 1;
@@ -408,8 +444,9 @@ dd {
 
 .copyright {
   position: absolute;
-  top: 506px;
-  left: 1763px;
+  bottom: 130px;
+  right: 50px;
+  left: auto;
   white-space: nowrap;
 }
 
@@ -457,3 +494,7 @@ dd {
 .to-top-fixed:hover { background: #fff; color: #0f0f0f; }
 @media (max-width: 700px) { .to-top-fixed { right: 16px; bottom: 16px; } }
 .to-top-fixed .ico { display: block; flex: 0 0 auto; }
+
+/* 영문 작은 텍스트 자간 0 */
+.small-copy:not(.ko) { letter-spacing: 0; }
+

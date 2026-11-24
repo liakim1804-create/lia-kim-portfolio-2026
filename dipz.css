@@ -115,3 +115,6 @@ img { display: block; max-width: 100%; }
 }
 
 .ico { flex: 0 0 auto; display: block; }
+
+/* 영문 작은 텍스트 자간 0 */
+.small-copy:not(.ko) { letter-spacing: 0; }
