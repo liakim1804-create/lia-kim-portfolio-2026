@@ -1,7 +1,7 @@
-/* PARALLAX 상세 — 사이트 히어로(밝은 화면) 그대로 사용: 텍스트는 어두운 색 */
-.hero--photo { background: #f4f8fc; }
+/* PARALLAX 상세 — 어두운 블루 히어로 이미지: 텍스트는 흰색 */
+.hero--photo { background: #0b1a4a; }
 .hero__photo { object-position: 50% 50%; }
-.hero--photo .hero__text, .hero--photo .hero__text .small-copy { color: #0b1830; }
+.hero--photo .hero__text, .hero--photo .hero__text .small-copy { color: #fff; }
 .bar { mix-blend-mode: difference; }
 .bar a { color: #fff; }
 .to-top { background: rgba(40, 54, 80, 0.88); color: #fff; }

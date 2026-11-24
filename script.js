@@ -1,5 +1,5 @@
 const DESIGN_WIDTH = 1920;
-const DESIGN_HEIGHT = 5153;
+const DESIGN_HEIGHT = 6116;
 
 function fitCanvas() {
   const viewport = document.querySelector('.viewport');
@@ -84,28 +84,42 @@ revealTargets.forEach((target) => revealObserver.observe(target));
   buttons.forEach((btn) => btn.addEventListener('click', () => {
     buttons.forEach((b) => b.classList.toggle('is-active', b === btn));
     const f = btn.dataset.filter;
-    const cols = [...document.querySelectorAll('.works-col')];
     const grid = document.querySelector('.works-grid');
     const show = cards.filter((c) => f === 'all' || c.dataset.cat === f);
     cards.forEach((c) => { c.hidden = !show.includes(c); });
-    /* 새로고침처럼: 보이는 카드를 처음부터 좌/우 번갈아 재배치 */
-    show.forEach((c, i) => cols[i % cols.length].appendChild(c));
+    /* 새로고침처럼: 보이는 카드에 슬롯(크기·위치)을 처음부터 다시 배정 */
+    const slots = ['slot-a', 'slot-b', 'slot-c', 'slot-d'];
+    cards.forEach((c) => c.classList.remove(...slots));
+    show.forEach((c, i) => c.classList.add(slots[i % slots.length]));
     grid.classList.remove('is-refresh'); void grid.offsetWidth; grid.classList.add('is-refresh');
   }));
 })();
 
-/* ---------- works 카드 스크롤 등장 (한 장씩) ---------- */
+/* ---------- works 카드 스크롤 등장 (한 장씩 순서대로) ---------- */
 (() => {
   const grid = document.querySelector('.works-grid');
-  if (!grid || !('IntersectionObserver' in window)) return;
+  if (!grid) return;
+  const cards = [...document.querySelectorAll('.wcard2')];
   grid.classList.add('is-armed');
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      if (!e.isIntersecting) return;
-      const card = e.target;
-      io.unobserve(card);
-      setTimeout(() => card.classList.add('in'), 120);
+  let queued = 0;
+  const check = () => {
+    const vh = window.innerHeight;
+    const ready = cards
+      .filter((c) => !c.classList.contains('in') && !c.dataset.q && !c.hidden)
+      .filter((c) => { const r = c.getBoundingClientRect(); return r.top < vh * 0.88 && r.bottom > 0; })
+      .sort((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top || a.getBoundingClientRect().left - b.getBoundingClientRect().left);
+    ready.forEach((c, i) => {
+      c.dataset.q = '1';
+      setTimeout(() => c.classList.add('in'), 120 + i * 280);
     });
-  }, { threshold: 0.12 });
-  document.querySelectorAll('.wcard2').forEach((c) => io.observe(c));
+  };
+  window.addEventListener('scroll', check, { passive: true });
+  window.addEventListener('resize', check);
+  window.addEventListener('load', check);
+  /* 필터로 다시 보여질 때도 한 장씩 */
+  document.querySelectorAll('.works-filter button').forEach((b) => b.addEventListener('click', () => {
+    cards.forEach((c) => { c.classList.remove('in'); delete c.dataset.q; });
+    setTimeout(check, 30);
+  }));
+  check();
 })();
